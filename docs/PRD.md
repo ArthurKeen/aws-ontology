@@ -1,6 +1,6 @@
 # AWS Object and Relationship Ontology Development - Product Requirements Document
 
-**Document Version:** 1.6
+**Document Version:** 1.7
 **Date:** August 2026
 
 > **Requirement identifiers.** Every testable requirement in this document carries a stable
@@ -46,13 +46,16 @@ The ontology primarily covers core and widely used AWS services:
   (Landing Zones)
 - **Detective Security:** GuardDuty (detectors, findings), Security Hub (hub, standards
   subscriptions)
+- **Analytics:** AWS Glue (databases, tables, crawlers, jobs); Amazon Athena (workgroups, data
+  catalogs, query executions); Amazon Kinesis (streams, Firehose, analytics applications); Amazon
+  EMR (clusters, steps, notebooks); Amazon OpenSearch Service (domains, indexes)
 
 ### Future scope (roadmap, not yet requirements)
 
 The following 2023+ service areas are candidates for promotion to requirements in a future PRD
-revision: analytics (Glue, Athena, Kinesis, EMR, OpenSearch), Cognito federation providers beyond
-user pools, security services WAF and Config, Direct Connect gateways (Transit Gateway itself is
-now in scope — see §3 above), CloudFormation/IaC, CodePipeline.
+revision: Cognito federation providers beyond user pools, security services WAF and Config, Direct
+Connect gateways (Transit Gateway itself is now in scope — see §3 above), CloudFormation/IaC,
+CodePipeline.
 
 ## 4. Key Entities (Classes)
 
@@ -75,6 +78,7 @@ now in scope — see §3 above), CloudFormation/IaC, CodePipeline.
 | REQ-034 | Transit Gateway classes MUST exist: `TransitGateway`, `TransitGatewayAttachment`, `TransitGatewayRouteTable` |
 | REQ-035 | ElastiCache classes MUST exist: `ElastiCacheCluster`, `ElastiCacheReplicationGroup` |
 | REQ-036 | Systems Manager classes MUST exist: `SSMParameter`, `SSMDocument`, `SSMPatchBaseline` |
+| REQ-037 | Analytics classes MUST exist: `GlueDatabase`, `GlueTable`, `GlueCrawler`, `GlueJob`, `AthenaWorkGroup`, `AthenaDataCatalog`, `AthenaQueryExecution`, `KinesisStream`, `KinesisFirehoseDeliveryStream`, `KinesisAnalyticsApplication`, `EMRCluster`, `EMRStep`, `EMRNotebook`, `OpenSearchDomain`, `OpenSearchIndex` |
 
 Additional classes may be added as necessary to represent the AWS ecosystem accurately; the
 implemented ontology may exceed this list.

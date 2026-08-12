@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **PRD v1.7**: one `new-requirement` patch (REQ-037) for the round-3 analytics expansion below,
+  proposed via `/prd-sync` once `arangodb-memory-mcp` write access returned, and accepted
 - **Service coverage expansion round 3**: a new `:AnalyticsResource` category (disjoint from the
   other 9, justified the same way `:AIResource` was) covering AWS Glue (`GlueDatabase`,
   `GlueTable`, `GlueCrawler`, `GlueJob`), Amazon Athena (`AthenaWorkGroup`, `AthenaDataCatalog`,
@@ -17,8 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   object + 112 datatype properties, 1982 triples. Example instances form one coherent clickstream
   pipeline spanning all five services rather than disconnected one-offs. `AthenaQueryExecution`,
   `EMRStep`, and `OpenSearchIndex` deliberately have no `:arn`, verified against each service's
-  documented IAM resource types rather than assumed. PRD patches for this round (REQ-037+) are
-  deferred pending `arangodb-memory-mcp` write access (see project notes).
+  documented IAM resource types rather than assumed. PRD REQ-037.
 - **PRD v1.6**: four `new-requirement` patches (REQ-033–036) for the round-2 service expansion
   below, proposed via `/prd-sync` and accepted
 - **Service coverage expansion round 2**: Amazon Route 53 (`Route53HostedZone`, `Route53RecordSet`,
