@@ -8,6 +8,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **PRD v1.8**: one `new-requirement` patch (REQ-038) for the round-4 expansion below, proposed
+  via `/prd-sync` and accepted
+- **Service coverage expansion round 4**: AWS WAF (`WAFWebACL`, `WAFRuleGroup`, `WAFIPSet` under
+  `:SecurityResource`), AWS Config (`ConfigRule`, `ConfigurationRecorder`, `ConfigConformancePack`
+  under `:MonitoringResource`), AWS Direct Connect (`DirectConnectGateway`,
+  `DirectConnectConnection`, `DirectConnectVirtualInterface` under `:NetworkingResource`), and a
+  new `:DeploymentResource` category (disjoint from the other 10) for AWS CloudFormation
+  (`CloudFormationStack`, `CloudFormationStackSet`, `CloudFormationChangeSet`) and AWS CodePipeline
+  (`CodePipelinePipeline`, `CodePipelineStage`) — 157 classes total (was 142), 151 object + 118
+  datatype properties, 2,152 triples. Reused the existing generic `:appliesTo` (WebACL → protected
+  resource) and `:complianceStatus` properties instead of inventing redundant ones. New examples
+  wire into 3 existing individuals from prior rounds: a CloudFormation stack now provisions the
+  existing `WebServerInstance`, a Config rule evaluates the existing `ProductionVPC`, and a new
+  Direct Connect gateway attaches into the existing `MainTransitGateway` — fulfilling the
+  `TransitGatewayAttachment` class comment's original mention of Direct Connect gateways.
+  `ConfigurationRecorder` and `CodePipelineStage` deliberately have no `:arn` (verified against
+  each service's documented IAM resource types — account/region-level singleton settings and
+  pipeline-internal sub-objects aren't independently ARNed). Caught a real name collision before
+  it shipped: a draft `:hasStage` for CodePipeline would have collided with the existing
+  `APIGateway`-scoped `:hasStage`, entailing a disjointness contradiction between
+  `:DeploymentResource` and `:IntegrationResource` under OWL DL — renamed to `:hasPipelineStage`.
+  SHACL warnings 45→47 (the two new no-ARN individuals), fully explained in
+  `ontology/aws.shapes.ttl`'s header, which was also backfilled with the no-ARN types from rounds
+  2–3 that had never been retroactively documented there. PRD REQ-038.
 - **PRD v1.7**: one `new-requirement` patch (REQ-037) for the round-3 analytics expansion below,
   proposed via `/prd-sync` once `arangodb-memory-mcp` write access returned, and accepted
 - **Service coverage expansion round 3**: a new `:AnalyticsResource` category (disjoint from the

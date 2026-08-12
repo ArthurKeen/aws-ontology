@@ -2,7 +2,7 @@
 
 ## 🎯 Overview
 
-This guide helps you explore the enhanced AWS Ontology using Protégé, the premier OWL ontology editor. Your ontology contains **1,982 triples** across **142 classes** and **251 properties**.
+This guide helps you explore the enhanced AWS Ontology using Protégé, the premier OWL ontology editor. Your ontology contains **2,152 triples** across **157 classes** and **269 properties**.
 
 ## 🚀 Getting Started
 
@@ -20,20 +20,22 @@ open ontology/aws.owl
 
 ## 📊 What You'll Find
 
-### Class Hierarchy (142 Classes)
-- **Base Resources**: `ComputeResource`, `StorageResource`, `NetworkingResource`, `IntegrationResource`
+### Class Hierarchy (157 Classes)
+- **Base Resources**: `ComputeResource`, `StorageResource`, `NetworkingResource`, `IntegrationResource`, `DeploymentResource`
 - **Container Services**: `ECSCluster`, `EKSCluster`, `FargateService`, `ECRRepository`
 - **API & Integration**: `APIGateway`, `StepFunction`, `EventBridge`, `SNSTopic`, `SQSQueue`
 - **Enhanced IAM**: `IAMUser`, `IAMRole`, `IAMPolicy` with subtypes
+- **Deployment & CI/CD**: `CloudFormationStack`, `CloudFormationStackSet`, `CodePipelinePipeline`
 
-### Object Properties (139 Properties)
+### Object Properties (151 Properties)
 - **Container Relationships**: `runsOnCluster`, `hasTaskDefinition`, `usesContainerImage`
 - **API Relationships**: `hasStage`, `triggersStepFunction`, `publishesToTopic`
 - **Temporal Relationships**: `createdBefore`, `replacedBy`, `migratedFrom`, `succeeds`
 - **Cost Relationships**: `incursChargeFor`, `optimizedBy`, `allocatesCostTo`
 - **Compliance Relationships**: `compliesWith`, `auditedBy`, `controlledBy`
+- **Deployment Relationships**: `provisionsResource`, `deploysStack`, `evaluatesComplianceOf`
 
-### Data Properties (112 Properties)
+### Data Properties (118 Properties)
 - **Temporal**: `lastModifiedDate`, `deprecatedDate`, `retentionPeriodDays`
 - **Cost**: `monthlyCostUSD`, `costCenter`, `billingMode`, `budgetAllocated`
 - **Compliance**: `complianceStatus`, `dataClassification`, `encryptionRequired`
@@ -134,10 +136,10 @@ SELECT ?property WHERE {
 ## 📈 Ontology Metrics Validation
 
 Your ontology should show:
-- **Total Triples**: 1,982
-- **Classes**: 142
-- **Object Properties**: 139
-- **Data Properties**: 112
+- **Total Triples**: 2,152
+- **Classes**: 157
+- **Object Properties**: 151
+- **Data Properties**: 118
 
 ## 🔍 Troubleshooting
 

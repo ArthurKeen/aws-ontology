@@ -19,11 +19,11 @@ The AWS Ontology is a production-ready semantic web resource that:
 
 | Metric | Count | Recent Growth |
 |--------|-------|---------------|
-| **Total Triples** | 1,982 | +166 triples |
-| **Classes** | 142 | +16 new classes (Glue, Athena, Kinesis, EMR, OpenSearch) |
-| **Object Properties** | 139 | +11 new properties |
-| **Data Properties** | 112 | +5 new properties |
-| **Example Instances** | 190 | typed individuals in examples.ttl |
+| **Total Triples** | 2,152 | +170 triples |
+| **Classes** | 157 | +15 new classes (WAF, Config, CloudFormation, CodePipeline, Direct Connect) |
+| **Object Properties** | 151 | +12 new properties |
+| **Data Properties** | 118 | +6 new properties |
+| **Example Instances** | 204 | typed individuals in examples.ttl |
 
 ## ⚡ Quick Example
 
@@ -150,6 +150,7 @@ graph TB
 *How the AWS Ontology integrates into analysis workflows across different platforms and use cases*
 
 ### Core Service Categories
+- **🚀 Deployment & CI/CD**: CloudFormation (Stacks, StackSets, Change Sets), CodePipeline (Pipelines, Stages)
 - **📈 Analytics**: Glue (Databases, Tables, Crawlers, Jobs), Athena (WorkGroups, Data Catalogs, Query Executions), Kinesis (Streams, Firehose, Analytics Applications), EMR (Clusters, Steps, Notebooks), OpenSearch (Domains, Indexes)
 - **🤖 AI/Generative AI**: Bedrock Foundation Models, Agents, Knowledge Bases, Guardrails; SageMaker Notebooks, Training Jobs, Models, Endpoints
 - **👤 Workforce Identity**: IAM Identity Center Instances, Permission Sets, Account Assignments; Cognito User/Identity Pools
@@ -160,11 +161,11 @@ graph TB
 - **💻 Compute**: EC2, Lambda, Auto Scaling Groups
 - **💾 Storage**: S3, EBS, EFS, RDS Clusters & Snapshots
 - **🗄️ Database**: DynamoDB, DocumentDB, Redshift, RDS, ElastiCache
-- **🌐 Networking**: VPC, Security Groups, Load Balancers, Elastic IPs, NAT/Internet Gateways, VPC Endpoints, Route 53, Transit Gateway
+- **🌐 Networking**: VPC, Security Groups, Load Balancers, Elastic IPs, NAT/Internet Gateways, VPC Endpoints, Route 53, Transit Gateway, Direct Connect (Gateways, Connections, Virtual Interfaces)
 - **🔐 Identity & Access**: IAM Users, Roles, Policies, Instance Profiles
-- **🔒 Security**: KMS Keys & Aliases, Secrets Manager, Network ACLs, Security Group Rules
+- **🔒 Security**: KMS Keys & Aliases, Secrets Manager, Network ACLs, Security Group Rules, WAF (Web ACLs, Rule Groups, IP Sets)
 - **🌍 Content Delivery**: CloudFront Distributions
-- **📊 Monitoring**: CloudWatch, CloudTrail, Systems Manager
+- **📊 Monitoring**: CloudWatch, CloudTrail, Systems Manager, AWS Config (Rules, Configuration Recorder, Conformance Packs)
 
 ### Advanced Relationship Types
 - **⏰ Temporal**: `createdBefore`, `replacedBy`, `migratedFrom`
@@ -255,7 +256,7 @@ open ontology/aws.owl
 ```
 
 **Key Protégé Features:**
-- **Class Hierarchy**: Browse 142 AWS resource classes
+- **Class Hierarchy**: Browse 157 AWS resource classes
 - **Object Properties**: Explore 139 relationship types
 - **Reasoning**: Validate with HermiT reasoner
 - **OntoGraf**: Visualize relationships graphically

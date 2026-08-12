@@ -1,6 +1,6 @@
 # AWS Object and Relationship Ontology Development - Product Requirements Document
 
-**Document Version:** 1.7
+**Document Version:** 1.8
 **Date:** August 2026
 
 > **Requirement identifiers.** Every testable requirement in this document carries a stable
@@ -29,15 +29,18 @@ The ontology primarily covers core and widely used AWS services:
 - **Containers:** ECS, EKS, Fargate, ECR
 - **Storage:** S3 (Buckets, Objects), EBS (Volumes, Snapshots), EFS, RDS (Instances, Databases)
 - **Networking:** VPC (Subnets, Route Tables, Internet Gateways, NAT Gateways), Security Groups,
-  Network ACLs, CloudFront; Transit Gateway (attachments, route tables)
+  Network ACLs, CloudFront; Transit Gateway (attachments, route tables); Direct Connect (gateways,
+  connections, virtual interfaces)
 - **DNS:** Amazon Route 53 (hosted zones, record sets, health checks)
 - **Identity & Access Management (IAM):** Users, Roles, Policies, Groups
 - **Databases:** DynamoDB, Aurora (as part of RDS), DocumentDB, Redshift; ElastiCache (Redis/
   Memcached clusters, replication groups)
 - **Integration:** API Gateway, Step Functions, EventBridge, SNS, SQS
-- **Security:** KMS, Secrets Manager
+- **Security:** KMS, Secrets Manager; AWS WAF (web ACLs, rule groups, IP sets)
 - **Monitoring & Logging:** CloudWatch, CloudTrail; Systems Manager (parameters, documents, patch
-  baselines)
+  baselines); AWS Config (rules, configuration recorder, conformance packs)
+- **Deployment & CI/CD:** AWS CloudFormation (stacks, StackSets, change sets); AWS CodePipeline
+  (pipelines, stages)
 - **AI/Generative AI:** Amazon Bedrock (foundation models, agents, knowledge bases, guardrails);
   Amazon SageMaker (notebooks, training jobs, models, endpoints)
 - **Workforce Identity:** IAM Identity Center (instances, permission sets, account assignments)
@@ -52,10 +55,8 @@ The ontology primarily covers core and widely used AWS services:
 
 ### Future scope (roadmap, not yet requirements)
 
-The following 2023+ service areas are candidates for promotion to requirements in a future PRD
-revision: Cognito federation providers beyond user pools, security services WAF and Config, Direct
-Connect gateways (Transit Gateway itself is now in scope — see §3 above), CloudFormation/IaC,
-CodePipeline.
+The following 2023+ service area is a candidate for promotion to a requirement in a future PRD
+revision: Cognito federation providers beyond user pools.
 
 ## 4. Key Entities (Classes)
 
@@ -79,6 +80,7 @@ CodePipeline.
 | REQ-035 | ElastiCache classes MUST exist: `ElastiCacheCluster`, `ElastiCacheReplicationGroup` |
 | REQ-036 | Systems Manager classes MUST exist: `SSMParameter`, `SSMDocument`, `SSMPatchBaseline` |
 | REQ-037 | Analytics classes MUST exist: `GlueDatabase`, `GlueTable`, `GlueCrawler`, `GlueJob`, `AthenaWorkGroup`, `AthenaDataCatalog`, `AthenaQueryExecution`, `KinesisStream`, `KinesisFirehoseDeliveryStream`, `KinesisAnalyticsApplication`, `EMRCluster`, `EMRStep`, `EMRNotebook`, `OpenSearchDomain`, `OpenSearchIndex` |
+| REQ-038 | Deployment/security/monitoring/networking classes MUST exist: `WAFWebACL`, `WAFRuleGroup`, `WAFIPSet`, `ConfigRule`, `ConfigurationRecorder`, `ConfigConformancePack`, `CloudFormationStack`, `CloudFormationStackSet`, `CloudFormationChangeSet`, `CodePipelinePipeline`, `CodePipelineStage`, `DirectConnectGateway`, `DirectConnectConnection`, `DirectConnectVirtualInterface` |
 
 Additional classes may be added as necessary to represent the AWS ecosystem accurately; the
 implemented ontology may exceed this list.

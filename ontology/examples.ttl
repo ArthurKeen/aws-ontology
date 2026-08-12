@@ -1123,7 +1123,7 @@
 :MainTransitGateway rdf:type :TransitGateway ;
     rdfs:label "Main Transit Gateway" ;
     :arn "arn:aws:ec2:us-east-1:123456789012:transit-gateway/tgw-0123456789abcdef0" ;
-    :hasAttachment :ProdVPCAttachment ;
+    :hasAttachment :ProdVPCAttachment, :CorpDXGatewayAttachment ;
     :hasRouteTable :MainTGWRouteTable ;
     :environment "production" .
 
@@ -1262,4 +1262,101 @@
 
 :ClickstreamIndex rdf:type :OpenSearchIndex ;
     rdfs:label "Clickstream Index" ;
+    :environment "production" .
+
+# Examples for AWS WAF (protects the existing CDNDistribution)
+:PublicWebACL rdf:type :WAFWebACL ;
+    rdfs:label "Public Web ACL" ;
+    :arn "arn:aws:wafv2:us-east-1:123456789012:regional/webacl/public-web-acl/a1b2c3d4-5678-90ab-cdef-example11111" ;
+    :scope "REGIONAL"^^xsd:string ;
+    :defaultAction "ALLOW"^^xsd:string ;
+    :hasRuleGroup :CommonThreatsRuleGroup ;
+    :appliesTo :CDNDistribution ;
+    :environment "production" .
+
+:CommonThreatsRuleGroup rdf:type :WAFRuleGroup ;
+    rdfs:label "Common Threats Rule Group" ;
+    :arn "arn:aws:wafv2:us-east-1:123456789012:regional/rulegroup/common-threats/b2c3d4e5-6789-01bc-def0-example22222" ;
+    :referencesIPSet :BlockedIPSet ;
+    :environment "production" .
+
+:BlockedIPSet rdf:type :WAFIPSet ;
+    rdfs:label "Blocked IP Set" ;
+    :arn "arn:aws:wafv2:us-east-1:123456789012:regional/ipset/blocked-ips/c3d4e5f6-7890-12cd-ef01-example33333" ;
+    :environment "production" .
+
+# Examples for AWS Config (evaluates compliance of the existing ProductionVPC)
+:ProdConfigRecorder rdf:type :ConfigurationRecorder ;
+    rdfs:label "Production Configuration Recorder" ;
+    :environment "production" .
+
+:VPCFlowLogsEnabledRule rdf:type :ConfigRule ;
+    rdfs:label "VPC Flow Logs Enabled Rule" ;
+    :arn "arn:aws:config:us-east-1:123456789012:config-rule/config-rule-vpcflow01" ;
+    :evaluatesComplianceOf :ProductionVPC ;
+    :complianceStatus "compliant"^^xsd:string ;
+    :environment "production" .
+
+:SecurityBaselineConformancePack rdf:type :ConfigConformancePack ;
+    rdfs:label "Security Baseline Conformance Pack" ;
+    :arn "arn:aws:config:us-east-1:123456789012:conformance-pack/security-baseline/conformance-pack-abc123" ;
+    :hasConfigRule :VPCFlowLogsEnabledRule ;
+    :environment "production" .
+
+# Examples for AWS CloudFormation and AWS CodePipeline (provisions the existing WebServerInstance)
+:WebTierStack rdf:type :CloudFormationStack ;
+    rdfs:label "Web Tier Stack" ;
+    :arn "arn:aws:cloudformation:us-east-1:123456789012:stack/web-tier-stack/d4e5f6a7-8901-23de-f012-example44444" ;
+    :stackStatus "UPDATE_COMPLETE"^^xsd:string ;
+    :provisionsResource :WebServerInstance ;
+    :hasChangeSet :WebTierScaleUpChangeSet ;
+    :environment "production" .
+
+:WebTierScaleUpChangeSet rdf:type :CloudFormationChangeSet ;
+    rdfs:label "Web Tier Scale-Up Change Set" ;
+    :arn "arn:aws:cloudformation:us-east-1:123456789012:changeSet/web-tier-scale-up/e5f6a7b8-9012-34ef-0123-example55555" ;
+    :environment "production" .
+
+:MultiRegionWebTierStackSet rdf:type :CloudFormationStackSet ;
+    rdfs:label "Multi-Region Web Tier StackSet" ;
+    :arn "arn:aws:cloudformation:us-east-1:123456789012:stackset/multi-region-web-tier:f6a7b8c9-0123-45f0-1234-example66666" ;
+    :hasStackInstance :WebTierStack ;
+    :environment "production" .
+
+:ReleasePipeline rdf:type :CodePipelinePipeline ;
+    rdfs:label "Web Tier Release Pipeline" ;
+    :arn "arn:aws:codepipeline:us-east-1:123456789012:web-tier-release" ;
+    :hasPipelineStage :DeployStage ;
+    :environment "production" .
+
+:DeployStage rdf:type :CodePipelineStage ;
+    rdfs:label "Deploy Stage" ;
+    :stageOrder "3"^^xsd:integer ;
+    :deploysStack :WebTierStack ;
+    :environment "production" .
+
+# Examples for AWS Direct Connect (attaches into the existing MainTransitGateway)
+:CorpDXConnection rdf:type :DirectConnectConnection ;
+    rdfs:label "Corporate Direct Connect Connection" ;
+    :arn "arn:aws:directconnect:us-east-1:123456789012:dxcon/dxcon-fgabc123" ;
+    :connectionBandwidth "10Gbps"^^xsd:string ;
+    :hasVirtualInterface :CorpTransitVIF ;
+    :environment "production" .
+
+:CorpTransitVIF rdf:type :DirectConnectVirtualInterface ;
+    rdfs:label "Corporate Transit Virtual Interface" ;
+    :arn "arn:aws:directconnect:us-east-1:123456789012:dxvif/dxvif-fgxyz789" ;
+    :virtualInterfaceType "transit"^^xsd:string ;
+    :associatedWithGateway :CorpDXGateway ;
+    :environment "production" .
+
+:CorpDXGateway rdf:type :DirectConnectGateway ;
+    rdfs:label "Corporate Direct Connect Gateway" ;
+    :arn "arn:aws:directconnect::123456789012:dx-gateway/dxgw-abc123de" ;
+    :environment "production" .
+
+:CorpDXGatewayAttachment rdf:type :TransitGatewayAttachment ;
+    rdfs:label "Corporate Direct Connect Gateway Attachment" ;
+    :arn "arn:aws:ec2:us-east-1:123456789012:transit-gateway-attachment/tgw-attach-0abcdef1234567890" ;
+    :attachesDirectConnectGateway :CorpDXGateway ;
     :environment "production" .

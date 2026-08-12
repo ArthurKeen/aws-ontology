@@ -2442,3 +2442,214 @@
     rdfs:comment "The OpenSearch or Elasticsearch engine version running on a domain" ;
     rdfs:domain :OpenSearchDomain ;
     rdfs:range xsd:string .
+
+### AWS WAF
+
+:WAFWebACL a owl:Class ;
+    rdfs:label "WAF Web ACL" ;
+    rdfs:comment "An AWS WAF web access control list that filters web requests based on configurable rules" ;
+    rdfs:subClassOf :SecurityResource .
+
+:WAFRuleGroup a owl:Class ;
+    rdfs:label "WAF Rule Group" ;
+    rdfs:comment "A reusable collection of AWS WAF rules that can be referenced by one or more web ACLs" ;
+    rdfs:subClassOf :SecurityResource .
+
+:WAFIPSet a owl:Class ;
+    rdfs:label "WAF IP Set" ;
+    rdfs:comment "An AWS WAF IP set defining a list of IP addresses or CIDR ranges for allow/block matching" ;
+    rdfs:subClassOf :SecurityResource .
+
+:hasRuleGroup a owl:ObjectProperty ;
+    rdfs:label "has rule group" ;
+    rdfs:comment "Relates a WAF web ACL to a rule group it evaluates against incoming requests" ;
+    rdfs:subPropertyOf :uses ;
+    rdfs:domain :WAFWebACL ;
+    rdfs:range :WAFRuleGroup .
+
+:referencesIPSet a owl:ObjectProperty ;
+    rdfs:label "references IP set" ;
+    rdfs:comment "Relates a WAF rule group to an IP set it references in a match condition" ;
+    rdfs:subPropertyOf :uses ;
+    rdfs:domain :WAFRuleGroup ;
+    rdfs:range :WAFIPSet .
+
+:scope a owl:DatatypeProperty ;
+    rdfs:label "scope" ;
+    rdfs:comment "The WAF scope a web ACL is associated with (REGIONAL or CLOUDFRONT)" ;
+    rdfs:domain :WAFWebACL ;
+    rdfs:range xsd:string .
+
+:defaultAction a owl:DatatypeProperty ;
+    rdfs:label "default action" ;
+    rdfs:comment "The action (ALLOW or BLOCK) a WAF web ACL takes when no rule matches a request" ;
+    rdfs:domain :WAFWebACL ;
+    rdfs:range xsd:string .
+
+### AWS Config
+
+:ConfigRule a owl:Class ;
+    rdfs:label "Config Rule" ;
+    rdfs:comment "An AWS Config rule that evaluates whether resource configurations comply with a desired state" ;
+    rdfs:subClassOf :MonitoringResource .
+
+:ConfigurationRecorder a owl:Class ;
+    rdfs:label "Configuration Recorder" ;
+    rdfs:comment "The AWS Config configuration recorder that tracks resource configuration changes for an account and region" ;
+    rdfs:subClassOf :MonitoringResource .
+
+:ConfigConformancePack a owl:Class ;
+    rdfs:label "Config Conformance Pack" ;
+    rdfs:comment "A Config conformance pack bundling a collection of Config rules and remediation actions for a common compliance framework" ;
+    rdfs:subClassOf :MonitoringResource .
+
+:evaluatesComplianceOf a owl:ObjectProperty ;
+    rdfs:label "evaluates compliance of" ;
+    rdfs:comment "Relates a Config rule to the AWS resource whose configuration it evaluates for compliance" ;
+    rdfs:domain :ConfigRule ;
+    rdfs:range :AWSResource .
+
+:hasConfigRule a owl:ObjectProperty ;
+    rdfs:label "has config rule" ;
+    rdfs:comment "Relates a Config conformance pack to a rule it bundles" ;
+    rdfs:subPropertyOf :contains ;
+    rdfs:domain :ConfigConformancePack ;
+    rdfs:range :ConfigRule .
+
+### AWS Direct Connect
+
+:DirectConnectGateway a owl:Class ;
+    rdfs:label "Direct Connect Gateway" ;
+    rdfs:comment "A global AWS Direct Connect gateway connecting Direct Connect virtual interfaces to VPCs across regions via Transit Gateway or virtual private gateway" ;
+    rdfs:subClassOf :NetworkingResource .
+
+:DirectConnectConnection a owl:Class ;
+    rdfs:label "Direct Connect Connection" ;
+    rdfs:comment "A dedicated physical network connection between an AWS Direct Connect location and an on-premises network" ;
+    rdfs:subClassOf :NetworkingResource .
+
+:DirectConnectVirtualInterface a owl:Class ;
+    rdfs:label "Direct Connect Virtual Interface" ;
+    rdfs:comment "A private, public, or transit virtual interface provisioned over a Direct Connect connection" ;
+    rdfs:subClassOf :NetworkingResource .
+
+:hasVirtualInterface a owl:ObjectProperty ;
+    rdfs:label "has virtual interface" ;
+    rdfs:comment "Relates a Direct Connect connection to a virtual interface provisioned over it" ;
+    rdfs:subPropertyOf :contains ;
+    rdfs:domain :DirectConnectConnection ;
+    rdfs:range :DirectConnectVirtualInterface .
+
+:associatedWithGateway a owl:ObjectProperty ;
+    rdfs:label "associated with gateway" ;
+    rdfs:comment "Relates a transit virtual interface to the Direct Connect gateway it is associated with" ;
+    rdfs:subPropertyOf :dependsOn ;
+    rdfs:domain :DirectConnectVirtualInterface ;
+    rdfs:range :DirectConnectGateway .
+
+:attachesDirectConnectGateway a owl:ObjectProperty ;
+    rdfs:label "attaches Direct Connect gateway" ;
+    rdfs:comment "Relates a Transit Gateway attachment to the Direct Connect gateway it connects" ;
+    rdfs:domain :TransitGatewayAttachment ;
+    rdfs:range :DirectConnectGateway .
+
+:connectionBandwidth a owl:DatatypeProperty ;
+    rdfs:label "connection bandwidth" ;
+    rdfs:comment "The provisioned bandwidth of a Direct Connect connection (e.g. 1Gbps, 10Gbps)" ;
+    rdfs:domain :DirectConnectConnection ;
+    rdfs:range xsd:string .
+
+:virtualInterfaceType a owl:DatatypeProperty ;
+    rdfs:label "virtual interface type" ;
+    rdfs:comment "The Direct Connect virtual interface type (private, public, or transit)" ;
+    rdfs:domain :DirectConnectVirtualInterface ;
+    rdfs:range xsd:string .
+
+### Management Resources (AWS CloudFormation, AWS CodePipeline)
+
+:DeploymentResource a owl:Class ;
+    rdfs:label "Deployment Resource" ;
+    rdfs:comment "Base class for infrastructure-as-code provisioning and continuous-delivery pipeline resources" ;
+    rdfs:subClassOf :AWSResource ;
+    owl:disjointWith :AIResource,
+        :AnalyticsResource,
+        :ComputeResource,
+        :DatabaseResource,
+        :IdentityResource,
+        :IntegrationResource,
+        :MonitoringResource,
+        :NetworkingResource,
+        :SecurityResource,
+        :StorageResource .
+
+:CloudFormationStack a owl:Class ;
+    rdfs:label "CloudFormation Stack" ;
+    rdfs:comment "A CloudFormation stack representing a collection of AWS resources managed as a single provisioning unit" ;
+    rdfs:subClassOf :DeploymentResource .
+
+:CloudFormationStackSet a owl:Class ;
+    rdfs:label "CloudFormation StackSet" ;
+    rdfs:comment "A CloudFormation StackSet that deploys a common stack template across multiple accounts and regions" ;
+    rdfs:subClassOf :DeploymentResource .
+
+:CloudFormationChangeSet a owl:Class ;
+    rdfs:label "CloudFormation Change Set" ;
+    rdfs:comment "A CloudFormation change set previewing proposed changes to a stack before they are executed" ;
+    rdfs:subClassOf :DeploymentResource .
+
+:CodePipelinePipeline a owl:Class ;
+    rdfs:label "CodePipeline Pipeline" ;
+    rdfs:comment "An AWS CodePipeline continuous-delivery pipeline that orchestrates build, test, and deploy stages" ;
+    rdfs:subClassOf :DeploymentResource .
+
+:CodePipelineStage a owl:Class ;
+    rdfs:label "CodePipeline Stage" ;
+    rdfs:comment "A named stage within a CodePipeline pipeline (e.g. Source, Build, Deploy) executing one or more actions in sequence" ;
+    rdfs:subClassOf :DeploymentResource .
+
+:hasChangeSet a owl:ObjectProperty ;
+    rdfs:label "has change set" ;
+    rdfs:comment "Relates a CloudFormation stack to a pending change set proposing updates to it" ;
+    rdfs:subPropertyOf :contains ;
+    rdfs:domain :CloudFormationStack ;
+    rdfs:range :CloudFormationChangeSet .
+
+:hasStackInstance a owl:ObjectProperty ;
+    rdfs:label "has stack instance" ;
+    rdfs:comment "Relates a CloudFormation StackSet to a stack instance it deploys into a target account and region" ;
+    rdfs:subPropertyOf :contains ;
+    rdfs:domain :CloudFormationStackSet ;
+    rdfs:range :CloudFormationStack .
+
+:provisionsResource a owl:ObjectProperty ;
+    rdfs:label "provisions resource" ;
+    rdfs:comment "Relates a CloudFormation stack to an AWS resource it provisions and manages" ;
+    rdfs:subPropertyOf :manages ;
+    rdfs:domain :CloudFormationStack ;
+    rdfs:range :AWSResource .
+
+:hasPipelineStage a owl:ObjectProperty ;
+    rdfs:label "has pipeline stage" ;
+    rdfs:comment "Relates a CodePipeline pipeline to a stage it executes in sequence" ;
+    rdfs:subPropertyOf :contains ;
+    rdfs:domain :CodePipelinePipeline ;
+    rdfs:range :CodePipelineStage .
+
+:deploysStack a owl:ObjectProperty ;
+    rdfs:label "deploys stack" ;
+    rdfs:comment "Relates a CodePipeline deploy stage to the CloudFormation stack it deploys" ;
+    rdfs:subPropertyOf :uses ;
+    rdfs:domain :CodePipelineStage ;
+    rdfs:range :CloudFormationStack .
+
+:stackStatus a owl:DatatypeProperty ;
+    rdfs:label "stack status" ;
+    rdfs:comment "The current status of a CloudFormation stack (e.g. CREATE_COMPLETE, UPDATE_IN_PROGRESS, ROLLBACK_COMPLETE)" ;
+    rdfs:domain :CloudFormationStack ;
+    rdfs:range xsd:string .
+
+:stageOrder a owl:DatatypeProperty ;
+    rdfs:label "stage order" ;
+    rdfs:comment "The sequential position of a stage within its pipeline" ;
+    rdfs:domain :CodePipelineStage ;
+    rdfs:range xsd:integer .
