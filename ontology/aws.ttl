@@ -2002,6 +2002,48 @@
     rdfs:domain :CognitoIdentityPool ;
     rdfs:range :CognitoUserPool .
 
+### Cognito federation providers (beyond user pools)
+# A user pool federates sign-in via a SAML/OIDC/social identity provider configured
+# INSIDE the pool (no ARN — a sub-resource addressed by provider name, like a Route
+# 53 record set). An identity pool can instead federate directly against an IAM SAML
+# or OIDC provider (both real, independently-ARNed IAM resources) to vend temporary
+# AWS credentials without a user pool in between.
+
+:CognitoIdentityProvider a owl:Class ;
+    rdfs:label "Cognito Identity Provider" ;
+    rdfs:comment "A SAML, OIDC, or social (Google/Facebook/LoginWithAmazon/SignInWithApple) identity provider configured within a Cognito user pool for federated sign-in" ;
+    rdfs:subClassOf :IdentityResource .
+
+:IAMSAMLProvider a owl:Class ;
+    rdfs:label "IAM SAML Provider" ;
+    rdfs:comment "An IAM SAML 2.0 identity provider trust, used to federate external SAML identities directly into AWS (e.g. via a Cognito identity pool)" ;
+    rdfs:subClassOf :IdentityResource .
+
+:IAMOIDCProvider a owl:Class ;
+    rdfs:label "IAM OIDC Provider" ;
+    rdfs:comment "An IAM OpenID Connect identity provider trust, used to federate external OIDC identities directly into AWS (e.g. via a Cognito identity pool)" ;
+    rdfs:subClassOf :IdentityResource .
+
+:hasIdentityProvider a owl:ObjectProperty ;
+    rdfs:label "has identity provider" ;
+    rdfs:comment "Relates a Cognito user pool to a federation identity provider configured within it" ;
+    rdfs:subPropertyOf :contains ;
+    rdfs:domain :CognitoUserPool ;
+    rdfs:range :CognitoIdentityProvider .
+
+:federatesExternalProvider a owl:ObjectProperty ;
+    rdfs:label "federates external provider" ;
+    rdfs:comment "Relates a Cognito identity pool to an IAM SAML or OIDC provider it federates directly, without an intervening user pool" ;
+    rdfs:subPropertyOf :uses ;
+    rdfs:domain :CognitoIdentityPool ;
+    rdfs:range :IdentityResource .
+
+:providerType a owl:DatatypeProperty ;
+    rdfs:label "provider type" ;
+    rdfs:comment "The federation provider type (e.g. SAML, OIDC, Google, Facebook, LoginWithAmazon, SignInWithApple)" ;
+    rdfs:domain :CognitoIdentityProvider ;
+    rdfs:range xsd:string .
+
 ### GuardDuty and Security Hub
 
 :GuardDutyDetector a owl:Class ;

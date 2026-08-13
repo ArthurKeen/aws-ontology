@@ -2,7 +2,7 @@
 
 ## 🎯 Overview
 
-This guide helps you explore the enhanced AWS Ontology using Protégé, the premier OWL ontology editor. Your ontology contains **2,152 triples** across **157 classes** and **269 properties**.
+This guide helps you explore the enhanced AWS Ontology using Protégé, the premier OWL ontology editor. Your ontology contains **2,181 triples** across **160 classes** and **272 properties**.
 
 ## 🚀 Getting Started
 
@@ -20,14 +20,14 @@ open ontology/aws.owl
 
 ## 📊 What You'll Find
 
-### Class Hierarchy (157 Classes)
+### Class Hierarchy (160 Classes)
 - **Base Resources**: `ComputeResource`, `StorageResource`, `NetworkingResource`, `IntegrationResource`, `DeploymentResource`
 - **Container Services**: `ECSCluster`, `EKSCluster`, `FargateService`, `ECRRepository`
 - **API & Integration**: `APIGateway`, `StepFunction`, `EventBridge`, `SNSTopic`, `SQSQueue`
 - **Enhanced IAM**: `IAMUser`, `IAMRole`, `IAMPolicy` with subtypes
 - **Deployment & CI/CD**: `CloudFormationStack`, `CloudFormationStackSet`, `CodePipelinePipeline`
 
-### Object Properties (151 Properties)
+### Object Properties (153 Properties)
 - **Container Relationships**: `runsOnCluster`, `hasTaskDefinition`, `usesContainerImage`
 - **API Relationships**: `hasStage`, `triggersStepFunction`, `publishesToTopic`
 - **Temporal Relationships**: `createdBefore`, `replacedBy`, `migratedFrom`, `succeeds`
@@ -35,7 +35,7 @@ open ontology/aws.owl
 - **Compliance Relationships**: `compliesWith`, `auditedBy`, `controlledBy`
 - **Deployment Relationships**: `provisionsResource`, `deploysStack`, `evaluatesComplianceOf`
 
-### Data Properties (118 Properties)
+### Data Properties (119 Properties)
 - **Temporal**: `lastModifiedDate`, `deprecatedDate`, `retentionPeriodDays`
 - **Cost**: `monthlyCostUSD`, `costCenter`, `billingMode`, `budgetAllocated`
 - **Compliance**: `complianceStatus`, `dataClassification`, `encryptionRequired`
@@ -136,10 +136,10 @@ SELECT ?property WHERE {
 ## 📈 Ontology Metrics Validation
 
 Your ontology should show:
-- **Total Triples**: 2,152
-- **Classes**: 157
-- **Object Properties**: 151
-- **Data Properties**: 118
+- **Total Triples**: 2,181
+- **Classes**: 160
+- **Object Properties**: 153
+- **Data Properties**: 119
 
 ## 🔍 Troubleshooting
 

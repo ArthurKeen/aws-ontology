@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **PRD v1.9**: one `new-requirement` patch (REQ-039) for the round-5 expansion below, proposed
+  via `/prd-sync` and accepted; the §3 Future scope subsection is now removed entirely (empty —
+  every item from the original modernization roadmap has been implemented and reconciled)
+- **Service coverage expansion round 5**: Cognito federation providers beyond user pools —
+  `CognitoIdentityProvider` (SAML/OIDC/social provider configured inside a user pool, no `:arn`,
+  same sub-resource discipline as `Route53RecordSet`) under `:IdentityResource`, plus
+  `IAMSAMLProvider` and `IAMOIDCProvider` (the OTHER federation path: IAM identity-provider trusts
+  attached directly to a Cognito identity pool, which DO have real ARNs) — 160 classes total (was
+  157), 153 object + 119 datatype properties, 2,181 triples. This was the last item on the original
+  PRD §3 Future-scope roadmap; the section is now empty. New examples wire into both existing
+  Cognito individuals from the original backfill round: `AppUserPool` gains a Google sign-in
+  provider, `AppIdentityPool` gains a direct SAML federation. PRD REQ-039.
 - **PRD v1.8**: one `new-requirement` patch (REQ-038) for the round-4 expansion below, proposed
   via `/prd-sync` and accepted
 - **Service coverage expansion round 4**: AWS WAF (`WAFWebACL`, `WAFRuleGroup`, `WAFIPSet` under

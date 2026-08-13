@@ -2,9 +2,9 @@
 
 [![CI](https://github.com/ArthurKeen/AWS_Ontology/actions/workflows/ci.yml/badge.svg)](https://github.com/ArthurKeen/AWS_Ontology/actions/workflows/ci.yml)
 
-A comprehensive semantic ontology for Amazon Web Services (AWS) resources and their relationships. This project provides a formal OWL ontology that models AWS infrastructure, services, and their complex interdependencies for advanced analysis, compliance monitoring, and automation. The AWS ontology can be used to bootstrap AWS graph projects for infrastructure mapping, security analysis, and cost optimization on graph databases that can ingest ontologies.  These include RDF databases that work natively with ontologies and property graph databases with RDF adapters, for example, it can be used with the [ArangoDB semantic layer integration](docs/ARANGODB_INTEGRATION.md) to generate flexible physical graph models (LPG, Property Graphs, RDF).
+A comprehensive semantic ontology for Amazon Web Services (AWS) resources and their relationships. This project provides a formal OWL ontology that models AWS infrastructure, services, and their complex interdependencies for advanced analysis, compliance monitoring, and automation. The AWS ontology can be used to bootstrap AWS graph projects for infrastructure mapping, security analysis, and cost optimization on graph databases that can ingest ontologies.  These include RDF databases that work natively with ontologies and property graph databases with RDF adapters, for example, it can be used with the [ArangoDB semantic layer integration](docs/ARANGODB_INTEGRATION.md) to generate ArangoDB graph schemas in different graph models such as Labeled Property Graphs (LPG) LPG, Property Graphs (PG) , and W3C Semantic Graphs (RDF).   
 
-## 🎯 Overview
+## Overview
 
 The AWS Ontology is a production-ready semantic web resource that:
 
@@ -15,17 +15,17 @@ The AWS Ontology is a production-ready semantic web resource that:
 - **Includes semantic constraints** (cardinality, disjoint classes, property characteristics)
 - **Offers testing framework** for quality assurance and validation
 
-## 📊 Current Metrics
+## Current Metrics
 
 | Metric | Count | Recent Growth |
 |--------|-------|---------------|
-| **Total Triples** | 2,152 | +170 triples |
-| **Classes** | 157 | +15 new classes (WAF, Config, CloudFormation, CodePipeline, Direct Connect) |
-| **Object Properties** | 151 | +12 new properties |
-| **Data Properties** | 118 | +6 new properties |
-| **Example Instances** | 204 | typed individuals in examples.ttl |
+| **Total Triples** | 2,181 | +29 triples |
+| **Classes** | 160 | +3 new classes (Cognito federation providers) |
+| **Object Properties** | 153 | +2 new properties |
+| **Data Properties** | 119 | +1 new property |
+| **Example Instances** | 207 | typed individuals in examples.ttl |
 
-## ⚡ Quick Example
+## Quick Example
 
 Get started in 30 seconds - here's how to query AWS resources using SPARQL:
 
@@ -82,7 +82,7 @@ FOR instance IN ec2_instances
 
 **What you get:** Immediate insight into your AWS infrastructure relationships, security posture, dependencies, and cost optimization opportunities through semantic queries across multiple database platforms.
 
-## 🏗️ Ontology Structure
+## Ontology Structure
 
 ### Visual Overview
 ![AWS Ontology Class Hierarchy](docs/images/ontology-protege-view.png)
@@ -150,44 +150,45 @@ graph TB
 *How the AWS Ontology integrates into analysis workflows across different platforms and use cases*
 
 ### Core Service Categories
-- **🚀 Deployment & CI/CD**: CloudFormation (Stacks, StackSets, Change Sets), CodePipeline (Pipelines, Stages)
-- **📈 Analytics**: Glue (Databases, Tables, Crawlers, Jobs), Athena (WorkGroups, Data Catalogs, Query Executions), Kinesis (Streams, Firehose, Analytics Applications), EMR (Clusters, Steps, Notebooks), OpenSearch (Domains, Indexes)
-- **🤖 AI/Generative AI**: Bedrock Foundation Models, Agents, Knowledge Bases, Guardrails; SageMaker Notebooks, Training Jobs, Models, Endpoints
-- **👤 Workforce Identity**: IAM Identity Center Instances, Permission Sets, Account Assignments; Cognito User/Identity Pools
-- **🏢 Governance**: Organizations, Organizational Units, Control Tower Landing Zones
-- **🕵️ Detective Security**: GuardDuty Detectors & Findings, Security Hub & Standards Subscriptions
-- **🔧 Container Services**: ECS, EKS, Fargate, ECR
-- **🔗 API & Integration**: API Gateway, Step Functions, EventBridge, SNS, SQS
-- **💻 Compute**: EC2, Lambda, Auto Scaling Groups
-- **💾 Storage**: S3, EBS, EFS, RDS Clusters & Snapshots
-- **🗄️ Database**: DynamoDB, DocumentDB, Redshift, RDS, ElastiCache
-- **🌐 Networking**: VPC, Security Groups, Load Balancers, Elastic IPs, NAT/Internet Gateways, VPC Endpoints, Route 53, Transit Gateway, Direct Connect (Gateways, Connections, Virtual Interfaces)
-- **🔐 Identity & Access**: IAM Users, Roles, Policies, Instance Profiles
-- **🔒 Security**: KMS Keys & Aliases, Secrets Manager, Network ACLs, Security Group Rules, WAF (Web ACLs, Rule Groups, IP Sets)
-- **🌍 Content Delivery**: CloudFront Distributions
-- **📊 Monitoring**: CloudWatch, CloudTrail, Systems Manager, AWS Config (Rules, Configuration Recorder, Conformance Packs)
+- **Deployment & CI/CD**: CloudFormation (Stacks, StackSets, Change Sets), CodePipeline (Pipelines, Stages)
+- **Analytics**: Glue (Databases, Tables, Crawlers, Jobs), Athena (WorkGroups, Data Catalogs, Query Executions), Kinesis (Streams, Firehose, Analytics Applications), EMR (Clusters, Steps, Notebooks), OpenSearch (Domains, Indexes)
+- **AI/Generative AI**: Bedrock Foundation Models, Agents, Knowledge Bases, Guardrails; SageMaker Notebooks, Training Jobs, Models, Endpoints
+- **Workforce Identity**: IAM Identity Center Instances, Permission Sets, Account Assignments
+- **Consumer Identity**: Cognito User/Identity Pools, Identity Providers (SAML/OIDC/social), IAM SAML/OIDC Providers
+- **Governance**: Organizations, Organizational Units, Control Tower Landing Zones
+- **Detective Security**: GuardDuty Detectors & Findings, Security Hub & Standards Subscriptions
+- **Container Services**: ECS, EKS, Fargate, ECR
+- **API & Integration**: API Gateway, Step Functions, EventBridge, SNS, SQS
+- **Compute**: EC2, Lambda, Auto Scaling Groups
+- **Storage**: S3, EBS, EFS, RDS Clusters & Snapshots
+- **Database**: DynamoDB, DocumentDB, Redshift, RDS, ElastiCache
+- **Networking**: VPC, Security Groups, Load Balancers, Elastic IPs, NAT/Internet Gateways, VPC Endpoints, Route 53, Transit Gateway, Direct Connect (Gateways, Connections, Virtual Interfaces)
+- **Identity & Access**: IAM Users, Roles, Policies, Instance Profiles
+- **Security**: KMS Keys & Aliases, Secrets Manager, Network ACLs, Security Group Rules, WAF (Web ACLs, Rule Groups, IP Sets)
+- **Content Delivery**: CloudFront Distributions
+- **Monitoring**: CloudWatch, CloudTrail, Systems Manager, AWS Config (Rules, Configuration Recorder, Conformance Packs)
 
 ### Advanced Relationship Types
 - **⏰ Temporal**: `createdBefore`, `replacedBy`, `migratedFrom`
-- **💰 Cost**: `incursChargeFor`, `optimizedBy`, `allocatesCostTo`
-- **🛡️ Compliance**: `compliesWith`, `auditedBy`, `controlledBy`
+- **Cost**: `incursChargeFor`, `optimizedBy`, `allocatesCostTo`
+- **Compliance**: `compliesWith`, `auditedBy`, `controlledBy`
 
-## 💡 Why Use the AWS Ontology?
+## Why Use the AWS Ontology?
 
 The AWS Ontology provides a structured, semantic foundation for understanding and analyzing AWS infrastructure relationships. Here's why it's valuable:
 
-### 🎯 **Project Development Benefits**
+### **Project Development Benefits**
 The structured semantic relationships in the ontology support various AWS infrastructure analysis projects:
 
-- **🏗️ Infrastructure Dependency Mapping**: Visualize and analyze complex resource relationships across your AWS environment
-- **🔍 Impact Analysis**: Understand cascading effects of changes before implementation
-- **🛡️ Security Policy Validation**: Ensure compliance and identify security gaps through relationship analysis
-- **💰 Cost Optimization**: Discover resource relationships that drive costs and optimization opportunities
-- **🏢 Multi-Account Governance**: Track and manage resources across organizational boundaries
-- **📋 Automated Documentation**: Generate up-to-date architecture diagrams and dependency maps
-- **🔧 Resource Discovery**: Find orphaned resources and understand their connections
+- **Infrastructure Dependency Mapping**: Visualize and analyze complex resource relationships across your AWS environment
+- **Impact Analysis**: Understand cascading effects of changes before implementation
+- **Security Policy Validation**: Ensure compliance and identify security gaps through relationship analysis
+- **Cost Optimization**: Discover resource relationships that drive costs and optimization opportunities
+- **Multi-Account Governance**: Track and manage resources across organizational boundaries
+- **Automated Documentation**: Generate up-to-date architecture diagrams and dependency maps
+- **Resource Discovery**: Find orphaned resources and understand their connections
 
-### 🔄 **Graph Database Integration**
+### **Graph Database Integration**
 The ontology can be imported into graph databases for enhanced querying and analysis capabilities. For example, the ArangoDB integration using ArangoRDF supports multiple physical graph models:
 - **Labeled Property Graphs (LPG)**: Industry-standard format for maximum compatibility
 - **ArangoDB-native Property Graphs**: Optimized for performance and native capabilities
@@ -195,7 +196,7 @@ The ontology can be imported into graph databases for enhanced querying and anal
 
 This approach allows you to choose the most appropriate representation for your specific analysis requirements.
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Python 3.8+
@@ -225,7 +226,7 @@ python tools/sync_formats.py check
 python -m pytest
 ```
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 AWS_Ontology/
@@ -243,7 +244,7 @@ AWS_Ontology/
 └── automation/         # AWS change monitoring tools
 ```
 
-## 🔍 Protégé Integration
+## Protégé Integration
 
 Open the ontology in Protégé for visual exploration:
 
@@ -256,7 +257,7 @@ open ontology/aws.owl
 ```
 
 **Key Protégé Features:**
-- **Class Hierarchy**: Browse 157 AWS resource classes
+- **Class Hierarchy**: Browse 160 AWS resource classes
 - **Object Properties**: Explore 139 relationship types
 - **Reasoning**: Validate with HermiT reasoner
 - **OntoGraf**: Visualize relationships graphically
@@ -264,7 +265,7 @@ open ontology/aws.owl
 
 See [`docs/PROTEGE_GUIDE.md`](docs/PROTEGE_GUIDE.md) for detailed exploration instructions.
 
-## 🧪 SPARQL Querying
+## SPARQL Querying
 
 The ontology supports rich SPARQL queries for analysis:
 
@@ -285,7 +286,7 @@ SELECT ?service ?stepFunction WHERE {
 
 See [`docs/SPARQL_EXAMPLES.md`](docs/SPARQL_EXAMPLES.md) for 22 ready-to-use queries.
 
-## 🔧 Tools & Utilities
+## Tools & Utilities
 
 ### Format Synchronization
 ```bash
@@ -323,7 +324,7 @@ python tools/monitor_aws_changes.py
 make schedule-setup
 ```
 
-## 🎯 Use Cases
+## Use Cases
 
 ### 1. Infrastructure Analysis
 - Model complex AWS architectures
@@ -350,7 +351,7 @@ make schedule-setup
 - Track migration relationships
 - Plan temporal sequences
 
-## 🧪 Testing Framework
+## Testing Framework
 
 Comprehensive testing ensures ontology quality:
 
@@ -376,7 +377,7 @@ make test-dl       # OWL 2 DL compliance
 make test-smoke    # CLI smoke tests
 ```
 
-## 📈 Development Workflow
+## Development Workflow
 
 ### Adding New Services
 1. Define classes and properties in `ontology/aws.ttl` (the editing source)
@@ -394,7 +395,7 @@ make test-smoke    # CLI smoke tests
 5. Update documentation
 6. Submit pull request
 
-## 🔗 Integration
+## Integration
 
 ### Graph Database Integration
 The ontology supports multiple graph database representations:
@@ -422,7 +423,7 @@ db = client.db('aws_ontology', username='root', password=os.getenv('ARANGO_PASSW
 - **R**: rdflib for R, igraph
 - **SPARQL**: Standard RDF query language support
 
-## 📚 Documentation
+## Documentation
 
 - [Usage Guide](docs/USAGE_GUIDE.md) - Comprehensive usage instructions
 - [SPARQL Examples](docs/SPARQL_EXAMPLES.md) - Query examples and patterns
@@ -431,7 +432,7 @@ db = client.db('aws_ontology', username='root', password=os.getenv('ARANGO_PASSW
 - [Protégé Guide](docs/PROTEGE_GUIDE.md) - Visual ontology exploration
 - [Maintenance Strategy](docs/MAINTENANCE_STRATEGY.md) - Long-term maintenance approach
 
-## 🤝 Community
+## Community
 
 ### Questions & Support
 - Create GitHub issues for questions
@@ -443,21 +444,21 @@ db = client.db('aws_ontology', username='root', password=os.getenv('ARANGO_PASSW
 - Explain use case and benefits
 - Consider contributing implementation
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🔄 Version History
+## Version History
 
 See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
 
 ### Latest Enhancements (v0.4.0)
-- ✅ Missing AWS Services (17 new classes: AutoScaling, EFS, DynamoDB, DocumentDB, Redshift, etc.)
-- ✅ Enhanced Storage & Database Coverage (EFS, RDS Clusters, DynamoDB, DocumentDB, Redshift)
-- ✅ Complete Networking Support (Elastic IPs, Target Groups, Network Interfaces, ACLs, VPC Endpoints)
-- ✅ Security Services (KMS Keys & Aliases, Secrets Manager, Security Group Rules)
-- ✅ Content Delivery (CloudFront Distributions)
-- ✅ 143+ New Example Instances with realistic AWS configurations
+- Missing AWS Services (17 new classes: AutoScaling, EFS, DynamoDB, DocumentDB, Redshift, etc.)
+- Enhanced Storage & Database Coverage (EFS, RDS Clusters, DynamoDB, DocumentDB, Redshift)
+- Complete Networking Support (Elastic IPs, Target Groups, Network Interfaces, ACLs, VPC Endpoints)
+- Security Services (KMS Keys & Aliases, Secrets Manager, Security Group Rules)
+- Content Delivery (CloudFront Distributions)
+- 143+ New Example Instances with realistic AWS configurations
 
 ---
 

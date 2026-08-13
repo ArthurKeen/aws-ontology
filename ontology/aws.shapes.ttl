@@ -20,12 +20,15 @@
 #       but PolicyStatement, AWSRegion, AvailabilityZone, IAMTrustPolicy,
 #       InlinePolicy, EKSPod, APIGatewayMethod/Resource, EventBridgeTarget,
 #       ContainerImage, Route53RecordSet, AthenaQueryExecution, EMRStep,
-#       OpenSearchIndex, ConfigurationRecorder, and CodePipelineStage genuinely
-#       have NO ARN in real AWS (they're sub-objects addressed by name/ID within
-#       their parent, or account/region-level singleton settings, not
-#       independently ARNed resources) — inventing one would misrepresent AWS's
-#       actual structure. Verified per-type against real AWS IAM resource-type
-#       documentation, not assumed.
+#       OpenSearchIndex, ConfigurationRecorder, CodePipelineStage, and
+#       CognitoIdentityProvider genuinely have NO ARN in real AWS (they're
+#       sub-objects addressed by name/ID within their parent, or account/region-
+#       level singleton settings, not independently ARNed resources) — inventing
+#       one would misrepresent AWS's actual structure. Verified per-type against
+#       real AWS IAM resource-type documentation, not assumed. (Note:
+#       IAMSAMLProvider/IAMOIDCProvider — the OTHER kind of Cognito-adjacent
+#       federation provider, attached directly to an identity pool — DO have
+#       real ARNs as IAM resources; only the user-pool-scoped kind lacks one.)
 #     * :hasStatement — customer-authored policies with a :policyDocument were
 #       linked to a matching structured :PolicyStatement, but bare AWS-managed
 #       policy references (content owned and defined by AWS, not modeled here)

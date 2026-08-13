@@ -1038,6 +1038,7 @@
     rdfs:label "App User Pool" ;
     :arn "arn:aws:cognito-idp:us-east-1:123456789012:userpool/us-east-1_AbCdEfGhI" ;
     :hasUserPoolClient :WebAppClient ;
+    :hasIdentityProvider :GoogleSignInProvider ;
     :environment "production" .
 
 :WebAppClient rdf:type :CognitoUserPoolClient ;
@@ -1048,6 +1049,23 @@
     rdfs:label "App Identity Pool" ;
     :arn "arn:aws:cognito-identity:us-east-1:123456789012:identitypool/us-east-1:a1b2c3d4-e5f6-7890-abcd-ef1234567890" ;
     :federatesUserPool :AppUserPool ;
+    :federatesExternalProvider :CorporateSAMLProvider ;
+    :environment "production" .
+
+# Examples for Cognito federation providers (beyond user pools)
+:GoogleSignInProvider rdf:type :CognitoIdentityProvider ;
+    rdfs:label "Google Sign-In Provider" ;
+    :providerType "Google"^^xsd:string ;
+    :environment "production" .
+
+:CorporateSAMLProvider rdf:type :IAMSAMLProvider ;
+    rdfs:label "Corporate SAML Provider" ;
+    :arn "arn:aws:iam::123456789012:saml-provider/CorporateADFS" ;
+    :environment "production" .
+
+:GitHubActionsOIDCProvider rdf:type :IAMOIDCProvider ;
+    rdfs:label "GitHub Actions OIDC Provider" ;
+    :arn "arn:aws:iam::123456789012:oidc-provider/token.actions.githubusercontent.com" ;
     :environment "production" .
 
 # Examples for GuardDuty and Security Hub

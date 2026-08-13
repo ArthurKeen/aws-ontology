@@ -1,6 +1,6 @@
 # AWS Object and Relationship Ontology Development - Product Requirements Document
 
-**Document Version:** 1.8
+**Document Version:** 1.9
 **Date:** August 2026
 
 > **Requirement identifiers.** Every testable requirement in this document carries a stable
@@ -44,7 +44,9 @@ The ontology primarily covers core and widely used AWS services:
 - **AI/Generative AI:** Amazon Bedrock (foundation models, agents, knowledge bases, guardrails);
   Amazon SageMaker (notebooks, training jobs, models, endpoints)
 - **Workforce Identity:** IAM Identity Center (instances, permission sets, account assignments)
-- **Consumer Identity:** Amazon Cognito (user pools, user pool clients, identity pools)
+- **Consumer Identity:** Amazon Cognito (user pools, user pool clients, identity pools); identity
+  providers (SAML, OIDC, social) configured within a user pool; IAM SAML/OIDC providers federated
+  directly into an identity pool
 - **Governance:** AWS Organizations (Organization, Organizational Units), Control Tower
   (Landing Zones)
 - **Detective Security:** GuardDuty (detectors, findings), Security Hub (hub, standards
@@ -52,11 +54,6 @@ The ontology primarily covers core and widely used AWS services:
 - **Analytics:** AWS Glue (databases, tables, crawlers, jobs); Amazon Athena (workgroups, data
   catalogs, query executions); Amazon Kinesis (streams, Firehose, analytics applications); Amazon
   EMR (clusters, steps, notebooks); Amazon OpenSearch Service (domains, indexes)
-
-### Future scope (roadmap, not yet requirements)
-
-The following 2023+ service area is a candidate for promotion to a requirement in a future PRD
-revision: Cognito federation providers beyond user pools.
 
 ## 4. Key Entities (Classes)
 
@@ -81,6 +78,7 @@ revision: Cognito federation providers beyond user pools.
 | REQ-036 | Systems Manager classes MUST exist: `SSMParameter`, `SSMDocument`, `SSMPatchBaseline` |
 | REQ-037 | Analytics classes MUST exist: `GlueDatabase`, `GlueTable`, `GlueCrawler`, `GlueJob`, `AthenaWorkGroup`, `AthenaDataCatalog`, `AthenaQueryExecution`, `KinesisStream`, `KinesisFirehoseDeliveryStream`, `KinesisAnalyticsApplication`, `EMRCluster`, `EMRStep`, `EMRNotebook`, `OpenSearchDomain`, `OpenSearchIndex` |
 | REQ-038 | Deployment/security/monitoring/networking classes MUST exist: `WAFWebACL`, `WAFRuleGroup`, `WAFIPSet`, `ConfigRule`, `ConfigurationRecorder`, `ConfigConformancePack`, `CloudFormationStack`, `CloudFormationStackSet`, `CloudFormationChangeSet`, `CodePipelinePipeline`, `CodePipelineStage`, `DirectConnectGateway`, `DirectConnectConnection`, `DirectConnectVirtualInterface` |
+| REQ-039 | Cognito federation classes MUST exist: `CognitoIdentityProvider`, `IAMSAMLProvider`, `IAMOIDCProvider` |
 
 Additional classes may be added as necessary to represent the AWS ecosystem accurately; the
 implemented ontology may exceed this list.
