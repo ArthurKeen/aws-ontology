@@ -4,11 +4,36 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
 
 <http://www.semanticweb.org/aws-ontology> a owl:Ontology ;
     rdfs:label "AWS Resource Ontology" ;
     rdfs:comment "An ontology for describing AWS resources, services, and their relationships." ;
-    owl:versionInfo "0.5.0" .
+    owl:versionInfo "0.5.0" ;
+    dcterms:source "AWS Service Documentation (docs.aws.amazon.com)"@en,
+        "AWS API Reference documentation"@en,
+        "AWS Whitepapers"@en ;
+    dcterms:creator "Arthur Keen"@en ;
+    dcterms:contributor "Claude (Anthropic) -- LLM-assisted authoring and verification"@en ;
+    dcterms:created "2026-07-15"^^xsd:date ;
+    dcterms:modified "2026-08-13"^^xsd:date ;
+    dcterms:description "Authored from AWS public documentation and API reference knowledge -- NOT extracted from a fixed, ingested document corpus, and NOT derived from live AWS API introspection. Every resource type's real-ARN existence is individually checked against AWS's own IAM resource-type reference rather than assumed. Independently validated by OWL 2 DL reasoning, SHACL closed-world shape validation, and an automated test suite (see :provenanceMethod / :verificationMethod for a machine-readable summary)."@en ;
+    :provenanceMethod "domain-knowledge-authored-and-verified" ;
+    :verificationMethod "owl-dl-reasoning", "shacl-validation", "automated-test-suite" .
+
+### Ontology-level provenance annotation properties
+# Distinct from the PROV-O alignment above (which describes AWS *resources* as
+# prov:Entity/prov:Activity): these two describe the ontology DOCUMENT itself, for
+# a consumer (e.g. an ontology-import tool) deciding how to weight or display
+# quality signals for content that was never extracted from source documents.
+
+:provenanceMethod a owl:AnnotationProperty ;
+    rdfs:label "provenance method" ;
+    rdfs:comment "How the ontology's content was originally authored. Recognized values: domain-knowledge-authored-and-verified (this ontology -- modeled from general documentation/API knowledge, not a fixed source corpus), extracted-from-documents, live-api-introspection, hybrid. Distinct from :verificationMethod, which records how the result was checked afterward, not how it was produced." .
+
+:verificationMethod a owl:AnnotationProperty ;
+    rdfs:label "verification method" ;
+    rdfs:comment "An independent, mechanical check the ontology's content was validated against after authoring (e.g. owl-dl-reasoning, shacl-validation, automated-test-suite), offered as the analogue of document-grounded faithfulness for content that has no source documents to cite." .
 
 :AWSManagedPolicy a owl:Class ;
     rdfs:label "AWS Managed Policy" ;

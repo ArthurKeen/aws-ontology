@@ -2,7 +2,7 @@
 
 ## 🎯 Overview
 
-This guide helps you explore the enhanced AWS Ontology using Protégé, the premier OWL ontology editor. Your ontology contains **2,181 triples** across **160 classes** and **272 properties**.
+This guide helps you explore the enhanced AWS Ontology using Protégé, the premier OWL ontology editor. Your ontology contains **2,199 triples** across **160 classes** and **272 properties**.
 
 ## 🚀 Getting Started
 
@@ -136,7 +136,7 @@ SELECT ?property WHERE {
 ## 📈 Ontology Metrics Validation
 
 Your ontology should show:
-- **Total Triples**: 2,181
+- **Total Triples**: 2,199
 - **Classes**: 160
 - **Object Properties**: 153
 - **Data Properties**: 119

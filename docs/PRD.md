@@ -1,6 +1,6 @@
 # AWS Object and Relationship Ontology Development - Product Requirements Document
 
-**Document Version:** 1.9
+**Document Version:** 2.0
 **Date:** August 2026
 
 > **Requirement identifiers.** Every testable requirement in this document carries a stable
@@ -108,6 +108,7 @@ implemented ontology may exceed this list.
 | REQ-025 | The ontology MUST ship SHACL shapes (`ontology/aws.shapes.ttl`) providing closed-world validation of instance data where OWL's open-world semantics cannot flag a specific individual as non-conforming |
 | REQ-026 | The ontology MUST align with PROV-O (`AWSResource rdfs:subClassOf prov:Entity`, model-invocation-style events as `prov:Activity`) to support provenance-chain queries, without importing PROV-O's full axiomatization (avoids a network-fetch dependency at load time) |
 | REQ-027 | The ontology MUST provide a SKOS concept scheme grouping the top-level resource categories, as a browsable taxonomy orthogonal to the strict OWL disjoint-class partitioning |
+| REQ-040 | The ontology MUST declare its own provenance on the `owl:Ontology` header (`dcterms:source`, `dcterms:creator`, `dcterms:created`/`modified`) plus a machine-readable `:provenanceMethod` and `:verificationMethod`, distinguishing content authored from domain knowledge and independently verified (this ontology) from content extracted from a document corpus with per-claim citations |
 
 ## 7. Data Sources
 

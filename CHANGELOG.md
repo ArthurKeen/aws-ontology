@@ -8,6 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Ontology-level provenance annotations (PRD v2.0, REQ-040)**: `dcterms:source`/`creator`/
+  `contributor`/`created`/`modified`/`description` on the `owl:Ontology` header, plus two new local
+  annotation properties, `:provenanceMethod` and `:verificationMethod`, declaring machine-readably
+  how the ontology was authored (`domain-knowledge-authored-and-verified` — modeled from AWS public
+  documentation and API reference knowledge, NOT extracted from a fixed ingested document corpus
+  and NOT derived from live AWS API introspection) and how it was independently checked afterward
+  (`owl-dl-reasoning`, `shacl-validation`, `automated-test-suite`). Motivated by a concrete external
+  finding: an ontology-import tool (arango-ontoextract) was scoring this ontology's Faithfulness
+  and Semantic Validity as blank/failing because those signals are LLM-judge outputs tied to
+  document-extraction provenance a hand-authored ontology never has — these annotations let a
+  consumer distinguish "no provenance available" from "authored and verified by a different,
+  non-document-grounded method." 160 classes unchanged; 2181→2199 triples (metadata only, no new
+  resource classes). PRD REQ-040.
 - **PRD v1.9**: one `new-requirement` patch (REQ-039) for the round-5 expansion below, proposed
   via `/prd-sync` and accepted; the §3 Future scope subsection is now removed entirely (empty —
   every item from the original modernization roadmap has been implemented and reconciled)

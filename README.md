@@ -19,7 +19,7 @@ The AWS Ontology is a production-ready semantic web resource that:
 
 | Metric | Count | Recent Growth |
 |--------|-------|---------------|
-| **Total Triples** | 2,181 | +29 triples |
+| **Total Triples** | 2,199 | +18 triples (ontology-level provenance metadata) |
 | **Classes** | 160 | +3 new classes (Cognito federation providers) |
 | **Object Properties** | 153 | +2 new properties |
 | **Data Properties** | 119 | +1 new property |
