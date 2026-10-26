@@ -1,12 +1,11 @@
 # AWS Object and Relationship Ontology Development - Product Requirements Document
 
-**Document Version:** 2.0
-**Date:** August 2026
+**Document Version:** 2.1
+**Date:** October 2026
 
 > **Requirement identifiers.** Every testable requirement in this document carries a stable
-> `REQ-NNN` identifier. Drift tooling (`/prd-sync`) audits the implementation against these IDs
-> and records gaps in the shared `drift_alerts` collection keyed as `aws-ontology_REQ-NNN`.
-> IDs are never renumbered; retired requirements are marked **RETIRED** in place.
+> `REQ-NNN` identifier, referenced from tests and changelog entries. IDs are never renumbered;
+> retired requirements are marked **RETIRED** in place.
 
 ## 1. Introduction
 
@@ -100,15 +99,16 @@ implemented ontology may exceed this list.
 
 | ID | Requirement |
 |----|-------------|
-| REQ-015 | The ontology MUST adhere to OWL 2 DL (validated with standard OWL reasoners/tools) |
+| REQ-015 | The ontology MUST adhere to OWL 2 DL, and the ontology together with its example instances MUST be consistent with no unsatisfiable classes, as verified by an OWL 2 DL reasoner (HermiT) in CI |
 | REQ-016 | Properties MUST specify `rdfs:domain` and `rdfs:range`, EXCEPT deliberately generic properties (`contains`, `uses`, `dependsOn`, and similar cross-cutting relations) where broad applicability is intended |
 | REQ-017 | Every class and property MUST have an `rdfs:label` and `rdfs:comment` |
 | REQ-018 | The ontology MUST ship with at least 50 example instances spanning all major service categories |
-| REQ-019 | The ontology MUST be published in two synchronized serializations (Turtle and OWL/XML) verified semantically identical |
+| REQ-019 | The ontology MUST be published in two synchronized serializations (Turtle, the editing source, and RDF/XML generated from it) verified semantically identical |
 | REQ-025 | The ontology MUST ship SHACL shapes (`ontology/aws.shapes.ttl`) providing closed-world validation of instance data where OWL's open-world semantics cannot flag a specific individual as non-conforming |
 | REQ-026 | The ontology MUST align with PROV-O (`AWSResource rdfs:subClassOf prov:Entity`, model-invocation-style events as `prov:Activity`) to support provenance-chain queries, without importing PROV-O's full axiomatization (avoids a network-fetch dependency at load time) |
 | REQ-027 | The ontology MUST provide a SKOS concept scheme grouping the top-level resource categories, as a browsable taxonomy orthogonal to the strict OWL disjoint-class partitioning |
 | REQ-040 | The ontology MUST declare its own provenance on the `owl:Ontology` header (`dcterms:source`, `dcterms:creator`, `dcterms:created`/`modified`) plus a machine-readable `:provenanceMethod` and `:verificationMethod`, distinguishing content authored from domain knowledge and independently verified (this ontology) from content extracted from a document corpus with per-claim citations |
+| REQ-041 | The ontology MUST use the persistent namespace `https://w3id.org/arango-solutions/aws-ontology#`, declare an `owl:versionIRI` of the form `https://w3id.org/arango-solutions/aws-ontology/<version>` for each release, and publish example instances as a separate ontology that imports the main ontology by IRI |
 
 ## 7. Data Sources
 

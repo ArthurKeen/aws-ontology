@@ -26,6 +26,9 @@ organization, with a permanent namespace.
   `IAMRole` are subclasses of `IAMEntity`. `hasPolicyAttachment` (and its equivalent
   `hasPolicy`) has domain `IAMIdentity`; `hasPermissionBoundary` and `canAssumeRole` have
   domain `IAMEntity`.
+- **PRD v2.1**: REQ-015 now requires HermiT-verified consistency of ontology + examples; REQ-019
+  names the second serialization correctly (RDF/XML); new REQ-041 fixes the persistent w3id
+  namespace and per-release `owl:versionIRI`; the intro no longer references private tooling.
 - `examples.ttl` is now its own ontology, `https://w3id.org/arango-solutions/aws-ontology/examples`,
   importing the main ontology by IRI (it previously redeclared the main ontology IRI and
   imported `<file:aws.owl>`). `ontology/catalog-v001.xml` resolves the imports locally in Protégé.
