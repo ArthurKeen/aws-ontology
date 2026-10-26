@@ -1,240 +1,53 @@
-# Environment Variables Configuration
+# Environment Variables
 
-This document describes all environment variables used in the AWS Ontology project for configuration and deployment.
+Every variable the project's tools and tests read. Nothing else is consulted.
 
-## Database Configuration
+## ArangoDB import (`tools/import_to_arangodb.py`)
 
-### ArangoDB Settings
+| Variable | Purpose | Default |
+|----------|---------|---------|
+| `ARANGO_PASSWORD` | Password for the ArangoDB user. **Required** unless `--password` is given; there is no built-in default. | — |
+| `ARANGO_HOST` | ArangoDB endpoint | `http://localhost:8529` |
+| `ARANGO_USERNAME` | ArangoDB user | `root` |
+| `ARANGO_DATABASE` | Target database (created if missing) | `aws_ontology` |
 
-| Variable | Description | Default | Required |
-|----------|-------------|---------|----------|
-| `ARANGO_PASSWORD` | ArangoDB root password | `openSesame` | No |
-| `ARANGO_HOST` | ArangoDB server host | `http://localhost:8529` | No |
-| `ARANGO_USERNAME` | ArangoDB username | `root` | No |
-| `ARANGO_DATABASE` | Default database name | `aws_ontology` | No |
-
-### Usage Examples
-
-#### Setting Environment Variables
-
-**Linux/macOS:**
-```bash
-# Set for current session
-export ARANGO_PASSWORD="your_secure_password"
-export ARANGO_HOST="http://your-server:8529"
-
-# Set permanently in ~/.bashrc or ~/.zshrc
-echo 'export ARANGO_PASSWORD="your_secure_password"' >> ~/.bashrc
-```
-
-**Windows:**
-```cmd
-# Set for current session
-set ARANGO_PASSWORD=your_secure_password
-
-# Set permanently
-setx ARANGO_PASSWORD "your_secure_password"
-```
-
-**Docker:**
-```bash
-# Pass environment variables to container
-docker run -d \
-  --name arangodb \
-  -p 8529:8529 \
-  -e ARANGO_ROOT_PASSWORD=${ARANGO_PASSWORD:-openSesame} \
-  arangodb/arangodb:latest
-```
-
-#### Using in Python Scripts
-
-```python
-import os
-
-# Get password from environment with fallback
-password = os.getenv('ARANGO_PASSWORD', 'openSesame')
-
-# Connect to ArangoDB
-from arango import ArangoClient
-client = ArangoClient(hosts=os.getenv('ARANGO_HOST', 'http://localhost:8529'))
-db = client.db(
-    os.getenv('ARANGO_DATABASE', 'aws_ontology'),
-    username=os.getenv('ARANGO_USERNAME', 'root'),
-    password=password
-)
-```
-
-## Development Configuration
-
-### Python Environment
-
-| Variable | Description | Default | Required |
-|----------|-------------|---------|----------|
-| `PYTHONPATH` | Additional Python module paths | None | No |
-| `AWS_ONTOLOGY_ROOT` | Project root directory | Auto-detected | No |
-
-### Testing Configuration
-
-| Variable | Description | Default | Required |
-|----------|-------------|---------|----------|
-| `SKIP_SLOW_TESTS` | Skip performance tests | `false` | No |
-| `TEST_TIMEOUT` | Test timeout in seconds | `300` | No |
-
-## Monitoring and Automation
-
-### Email Configuration
-
-| Variable | Description | Default | Required |
-|----------|-------------|---------|----------|
-| `SMTP_HOST` | SMTP server hostname | None | Yes* |
-| `SMTP_PORT` | SMTP server port | `587` | No |
-| `SMTP_USERNAME` | SMTP authentication username | None | Yes* |
-| `SMTP_PASSWORD` | SMTP authentication password | None | Yes* |
-| `EMAIL_FROM` | Sender email address | None | Yes* |
-| `EMAIL_TO` | Recipient email addresses (comma-separated) | None | Yes* |
-
-*Required only if using email notifications
-
-### Monitoring Configuration
-
-| Variable | Description | Default | Required |
-|----------|-------------|---------|----------|
-| `MONITOR_INTERVAL` | Monitoring check interval (hours) | `24` | No |
-| `LOG_LEVEL` | Logging level (DEBUG, INFO, WARNING, ERROR) | `INFO` | No |
-| `LOG_DIR` | Log file directory | `automation/logs` | No |
-
-## Security Best Practices
-
-### Password Management
-
-1. **Never hardcode passwords** in scripts or configuration files
-2. **Use strong passwords** with mixed case, numbers, and symbols
-3. **Rotate passwords regularly** in production environments
-4. **Use environment-specific passwords** for different deployments
-
-### Environment Files
-
-Create `.env` files for local development (already in `.gitignore`):
+Command-line flags (`--password`, `--host`, `--username`, `--database`) override these.
 
 ```bash
-# .env file (DO NOT COMMIT TO GIT)
-ARANGO_PASSWORD=your_secure_password
-ARANGO_HOST=http://localhost:8529
-SMTP_PASSWORD=your_email_password
-EMAIL_TO=admin@yourcompany.com
+export ARANGO_PASSWORD='choose-a-strong-password'
+export ARANGO_HOST='https://my-arango.example.com:8529'
+python tools/import_to_arangodb.py --test-queries
 ```
 
-Load with:
-```bash
-# Load environment variables from .env file
-set -a
-source .env
-set +a
-```
+Keep credentials out of the repository: use your shell profile, a secrets manager, or an
+untracked `.env` file (`.env` is already in `.gitignore`).
 
-### Production Deployment
+## Ontology coverage monitor (`tools/propose_ontology_updates.py`)
 
-For production deployments:
+| Variable | Purpose |
+|----------|---------|
+| `ANTHROPIC_API_KEY` | Claude API key used to triage AWS "What's New" items. In GitHub Actions this comes from the `ANTHROPIC_API_KEY` repository secret. |
+| `GITHUB_OUTPUT` | Set automatically by GitHub Actions; the tool writes `findings` / `proposal_path` outputs there. |
 
-1. **Use container orchestration** environment variable injection
-2. **Use secrets management** systems (AWS Secrets Manager, HashiCorp Vault)
-3. **Limit environment variable scope** to necessary processes only
-4. **Monitor access** to environment variables in logs
+Install the tool's dependency with `uv sync --group monitor`.
 
-## Configuration Examples
+## Tests
 
-### Local Development
+| Variable | Purpose |
+|----------|---------|
+| `REQUIRE_REASONER=1` | Fail (instead of skip) the HermiT consistency test when no Java runtime is available. Set in CI. |
+| `ARANGO_TEST_HOST` | Enables `tests/test_arangodb_import.py` against this ArangoDB endpoint (uses `ARANGO_PASSWORD`). The test creates and drops its own uniquely named databases. Set in CI. |
 
 ```bash
-# Minimal local setup
-export ARANGO_PASSWORD="dev_password"
-
-# Run import tool
-python tools/import_to_arangodb.py
+# Full local run, including the live-ArangoDB integration test
+docker run -d --rm --name arango-test -e ARANGO_ROOT_PASSWORD=test-only \
+  -p 127.0.0.1:8529:8529 arangodb:3.12
+ARANGO_TEST_HOST=http://127.0.0.1:8529 ARANGO_PASSWORD=test-only REQUIRE_REASONER=1 uv run pytest
+docker stop arango-test
 ```
 
-### Production Deployment
+## Scheduled monitoring (`automation/`)
 
-```bash
-# Production environment variables
-export ARANGO_PASSWORD="$(aws secretsmanager get-secret-value --secret-id prod/arango/password --query SecretString --output text)"
-export ARANGO_HOST="https://prod-arango.company.com:8529"
-export ARANGO_DATABASE="aws_ontology_prod"
-export EMAIL_TO="devops@company.com,data-team@company.com"
-export LOG_LEVEL="WARNING"
-
-# Run with production settings
-python tools/import_to_arangodb.py --database aws_ontology_prod
-```
-
-### Docker Compose
-
-```yaml
-# docker-compose.yml
-version: '3.8'
-services:
-  arangodb:
-    image: arangodb/arangodb:latest
-    environment:
-      - ARANGO_ROOT_PASSWORD=${ARANGO_PASSWORD:-openSesame}
-    ports:
-      - "8529:8529"
-    volumes:
-      - arangodb_data:/var/lib/arangodb3
-
-  ontology-importer:
-    build: .
-    environment:
-      - ARANGO_PASSWORD=${ARANGO_PASSWORD}
-      - ARANGO_HOST=http://arangodb:8529
-    depends_on:
-      - arangodb
-
-volumes:
-  arangodb_data:
-```
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Environment variable not found**: Check spelling and ensure variable is exported
-2. **Permission denied**: Verify user has access to read environment variables
-3. **Connection failed**: Confirm ARANGO_HOST and ARANGO_PASSWORD are correct
-4. **Import errors**: Check ARANGO_DATABASE exists and user has write permissions
-
-### Debugging
-
-Enable debug logging to see which environment variables are being used:
-
-```bash
-export LOG_LEVEL=DEBUG
-python tools/import_to_arangodb.py
-```
-
-### Validation Script
-
-Create a simple validation script:
-
-```python
-#!/usr/bin/env python3
-import os
-
-required_vars = ['ARANGO_PASSWORD']
-optional_vars = ['ARANGO_HOST', 'ARANGO_USERNAME', 'ARANGO_DATABASE']
-
-print("Environment Variable Status:")
-print("=" * 40)
-
-for var in required_vars:
-    value = os.getenv(var)
-    status = "✅ SET" if value else "❌ MISSING"
-    print(f"{var}: {status}")
-
-for var in optional_vars:
-    value = os.getenv(var)
-    status = f"✅ {value}" if value else "⚠️  Using default"
-    print(f"{var}: {status}")
-```
-
-This ensures all necessary environment variables are properly configured before running the AWS Ontology tools.
+`automation/schedule_monitoring.py` is configured through a JSON file
+(`--config automation/config.json`; create a sample with `make schedule-setup`), not through
+environment variables. Keep SMTP credentials in that file out of version control.

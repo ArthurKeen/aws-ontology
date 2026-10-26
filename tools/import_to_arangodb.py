@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """
 Import AWS Ontology into ArangoDB using ArangoRDF.
+
+Supports ArangoRDF's three transformations (see https://github.com/ArangoDB-Community/ArangoRDF):
+  pgt  Property Graph Transformation (default): one collection per RDF class
+       (e.g. EC2Instance), one edge collection per object property (e.g. belongsToVPC)
+  rpt  RDF-topology Preserving Transformation: generic resource/literal/statement collections
+  lpg  Labeled Property Graph: a single Node collection and a single Edge collection
 """
 
 import argparse
@@ -24,8 +30,7 @@ try:
     ARANGO_AVAILABLE = True
 except ImportError as e:
     logging.error(f"ArangoDB dependencies not available: {e}")
-    logging.info("Please install: pip install python-arango")
-    logging.info("And ensure ArangoRDF is installed from local clone")
+    logging.info("Please install: pip install python-arango arango-rdf")
     ARANGO_AVAILABLE = False
 
 
@@ -52,16 +57,13 @@ def connect_to_arangodb(
         # Connect to system database first
         sys_db = client.db("_system", username=username, password=password)
 
-        # Try to create database
-        try:
-            db = sys_db.create_database(db_name)
-            logging.info(f"Created new database: {db_name}")
-        except Exception:
-            # Database exists, connect to it
-            db = client.db(db_name, username=username, password=password)
+        if sys_db.has_database(db_name):
             logging.info(f"Connected to existing database: {db_name}")
+        else:
+            sys_db.create_database(db_name)
+            logging.info(f"Created new database: {db_name}")
 
-        return db
+        return client.db(db_name, username=username, password=password)
 
     except Exception as e:
         logging.error(f"Failed to connect to ArangoDB: {e}")
@@ -103,14 +105,25 @@ def load_ontology_data(include_examples: bool = True) -> Graph | None:
     return ontology_graph
 
 
-def import_rdf_data(db, graph: Graph, overwrite: bool = True) -> bool:
-    """Import RDF data into ArangoDB."""
+TRANSFORMS = {
+    "pgt": "rdf_to_arangodb_by_pgt",
+    "rpt": "rdf_to_arangodb_by_rpt",
+    "lpg": "rdf_to_arangodb_by_lpg",
+}
+
+
+def import_rdf_data(
+    db, graph: Graph, model: str = "pgt", graph_name: str = "AWSOntology", overwrite: bool = True
+) -> bool:
+    """Import RDF data into ArangoDB as a named graph using the chosen ArangoRDF transform."""
     try:
         logging.info("Initializing ArangoRDF...")
         arango_rdf = ArangoRDF(db)
 
-        logging.info(f"Importing {len(graph)} triples into ArangoDB...")
-        arango_rdf.insert_rdf(graph, overwrite=overwrite)
+        logging.info(f"Importing {len(graph)} triples into graph '{graph_name}' ({model})...")
+        # LPG forwards overwrite_graph to PGT through its **pgt_kwargs.
+        transform = getattr(arango_rdf, TRANSFORMS[model])
+        transform(graph_name, graph, overwrite_graph=overwrite)
 
         logging.info("Successfully imported RDF data")
         return True
@@ -139,50 +152,31 @@ def print_database_stats(db):
         logging.error(f"Failed to get statistics: {e}")
 
 
-def test_queries(db):
-    """Run test queries to verify import."""
-    logging.info("Running test queries...")
-
-    try:
-        # Query 1: Count AWS classes
-        aql = """
-        FOR doc IN statements
-            FILTER doc.predicate == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-            FILTER doc.object == "http://www.w3.org/2002/07/owl#Class"
-            FILTER CONTAINS(doc.subject, "aws-ontology")
-            RETURN doc.subject
-        """
-
-        cursor = db.aql.execute(aql)
-        aws_classes = list(cursor)
-        logging.info(f"Found {len(aws_classes)} AWS ontology classes")
-
-        # Query 2: Count example instances
-        aql = """
-        FOR doc IN statements
-            FILTER doc.predicate == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-            FILTER CONTAINS(doc.subject, "example")
-            RETURN doc.subject
-        """
-
-        cursor = db.aql.execute(aql)
-        examples = list(cursor)
-        logging.info(f"Found {len(examples)} example instances")
-
-        # Query 3: Sample EC2 instances
-        aql = """
-        FOR doc IN statements
-            FILTER doc.predicate == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-            FILTER doc.object == "http://www.semanticweb.org/aws-ontology#EC2Instance"
-            LIMIT 5
-            RETURN doc.subject
-        """
-
-        cursor = db.aql.execute(aql)
-        ec2_instances = list(cursor)
-        logging.info(f"Sample EC2 instances: {len(ec2_instances)}")
-
+def test_queries(db, model: str = "pgt") -> bool:
+    """Run sanity queries against a PGT import to verify the graph is traversable."""
+    if model != "pgt":
+        logging.info(f"Test queries are written for the pgt model; skipping for {model}")
         return True
+
+    logging.info("Running test queries...")
+    try:
+        counts = {}
+        for name in ("Class", "EC2Instance", "belongsToVPC"):
+            counts[name] = db.collection(name).count() if db.has_collection(name) else 0
+            logging.info(f"  {name}: {counts[name]} documents")
+
+        aql = """
+        FOR instance IN EC2Instance
+            FOR vpc IN 1..1 OUTBOUND instance belongsToVPC
+                RETURN {instance: instance._label, vpc: vpc._label}
+        """
+        placements = list(db.aql.execute(aql))
+        logging.info(f"  EC2 instance -> VPC placements: {placements}")
+
+        ok = counts["Class"] > 0 and counts["EC2Instance"] > 0 and bool(placements)
+        if not ok:
+            logging.error("Test queries found an empty or untraversable graph")
+        return ok
 
     except Exception as e:
         logging.error(f"Test queries failed: {e}")
@@ -200,18 +194,35 @@ def main():
 
     parser.add_argument(
         "--host",
-        default="http://localhost:8529",
-        help="ArangoDB host (default: http://localhost:8529)",
+        default=os.getenv("ARANGO_HOST", "http://localhost:8529"),
+        help="ArangoDB host (default: $ARANGO_HOST or http://localhost:8529)",
     )
 
-    parser.add_argument("--username", default="root", help="ArangoDB username (default: root)")
+    parser.add_argument(
+        "--username",
+        default=os.getenv("ARANGO_USERNAME", "root"),
+        help="ArangoDB username (default: $ARANGO_USERNAME or root)",
+    )
 
     parser.add_argument(
         "--password", default=None, help="ArangoDB password (default: from ARANGO_PASSWORD env var)"
     )
 
     parser.add_argument(
-        "--database", default="aws_ontology", help="Database name (default: aws_ontology)"
+        "--database",
+        default=os.getenv("ARANGO_DATABASE", "aws_ontology"),
+        help="Database name (default: $ARANGO_DATABASE or aws_ontology)",
+    )
+
+    parser.add_argument(
+        "--model",
+        choices=sorted(TRANSFORMS),
+        default="pgt",
+        help="ArangoRDF transformation: pgt (default), rpt, or lpg",
+    )
+
+    parser.add_argument(
+        "--graph-name", default="AWSOntology", help="Named graph to create (default: AWSOntology)"
     )
 
     parser.add_argument(
@@ -249,7 +260,9 @@ def main():
         sys.exit(1)
 
     # Step 3: Import data
-    success = import_rdf_data(db, graph, overwrite=not args.no_overwrite)
+    success = import_rdf_data(
+        db, graph, model=args.model, graph_name=args.graph_name, overwrite=not args.no_overwrite
+    )
     if not success:
         sys.exit(1)
 
@@ -257,8 +270,8 @@ def main():
     print_database_stats(db)
 
     # Step 5: Run test queries if requested
-    if args.test_queries:
-        test_queries(db)
+    if args.test_queries and not test_queries(db, model=args.model):
+        sys.exit(1)
 
     logger.info("Import completed successfully!")
     logger.info("Next steps:")
