@@ -89,11 +89,17 @@ outputs/
 temp/
 tmp/
 
-# Drift-detection queue (session-local, managed by .claude/settings.json hooks)
+# Local AI-assistant harnesses (Claude Code / Cursor config, hooks, skills, drift queues).
+# These are per-maintainer tooling, not part of the published project.
+.claude/
+.cursor/
+CLAUDE.md
 .prd-drift-queue/
+.pattern-capture-queue/
 .no-drift-gate
 
-# .claude/ and CLAUDE.md are intentionally tracked: the dark-factory harness
-# (skills, hooks, settings) is shared, version-controlled project config, not
-# local state. Local-only overrides go in .claude/settings.local.json instead.
-.claude/settings.local.json
+# Local monitoring output
+monitoring/
+
+# Scheduled-monitoring config (may contain SMTP credentials)
+automation/config.json

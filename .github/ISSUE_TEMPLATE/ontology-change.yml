@@ -1,0 +1,21 @@
+name: Ontology change request
+description: Propose a new AWS service, class, or relationship, or report a modelling error
+labels: ["ontology"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What should change?
+      description: The AWS service, resource type, or relationship, and what the ontology should say.
+    validations:
+      required: true
+  - type: input
+    id: docs
+    attributes:
+      label: AWS documentation link
+      description: Link to the AWS docs or API reference describing this behaviour.
+  - type: textarea
+    id: usecase
+    attributes:
+      label: Use case
+      description: What query or analysis does this enable?

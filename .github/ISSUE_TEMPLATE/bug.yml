@@ -1,0 +1,16 @@
+name: Tooling bug
+description: Something in the tools, tests, or docs does not work
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Command run, expected result, actual result (with error output).
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      description: OS, Python version, ArangoDB version if relevant.

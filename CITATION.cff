@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use the AWS Ontology, please cite it as below."
+type: dataset
+title: "AWS Ontology: an OWL 2 ontology of Amazon Web Services resources and their relationships"
+version: 0.6.0
+date-released: 2026-10-26
+license: MIT
+url: "https://w3id.org/arango-solutions/aws-ontology"
+repository-code: "https://github.com/arango-solutions/AWS_Ontology"
+authors:
+  - family-names: Keen
+    given-names: Arthur
+  - name: Arango
+keywords:
+  - ontology
+  - OWL
+  - RDF
+  - AWS
+  - cloud infrastructure
+  - knowledge graph
+  - ArangoDB

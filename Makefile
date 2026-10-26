@@ -148,8 +148,6 @@ schedule-weekly:
 	@echo "Running weekly report task..."
 	python automation/schedule_monitoring.py --run-once weekly --config automation/config.json
 
-# Note: ArangoDB transformation moved to separate private repository
-
 # Clean temporary files
 clean:
 	@echo "Cleaning temporary files..."

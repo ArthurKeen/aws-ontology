@@ -1,0 +1,31 @@
+# w3id.org redirects for https://w3id.org/arango-solutions/
+# Source of truth for the file submitted to https://github.com/perma-id/w3id.org
+# (as arango-solutions/.htaccess). See w3id/README.md.
+
+Options +FollowSymLinks
+RewriteEngine on
+
+# --- AWS Ontology --------------------------------------------------------------------------
+# Term IRIs are hash IRIs (aws-ontology#EC2Instance); the fragment never reaches the server,
+# so every term resolves through the rules for the ontology document itself.
+
+# Example instances
+RewriteCond %{HTTP_ACCEPT} application/rdf\+xml
+RewriteRule ^aws-ontology/examples/?$ https://raw.githubusercontent.com/arango-solutions/AWS_Ontology/main/ontology/examples.ttl [R=303,L]
+RewriteCond %{HTTP_ACCEPT} text/html
+RewriteRule ^aws-ontology/examples/?$ https://github.com/arango-solutions/AWS_Ontology/blob/main/ontology/examples.ttl [R=302,L]
+RewriteRule ^aws-ontology/examples/?$ https://raw.githubusercontent.com/arango-solutions/AWS_Ontology/main/ontology/examples.ttl [R=303,L]
+
+# Version IRIs, e.g. aws-ontology/0.6.0 -> the tagged release v0.6.0
+RewriteCond %{HTTP_ACCEPT} application/rdf\+xml
+RewriteRule ^aws-ontology/([0-9]+\.[0-9]+\.[0-9]+)/?$ https://raw.githubusercontent.com/arango-solutions/AWS_Ontology/v$1/ontology/aws.owl [R=303,L]
+RewriteCond %{HTTP_ACCEPT} text/html
+RewriteRule ^aws-ontology/([0-9]+\.[0-9]+\.[0-9]+)/?$ https://github.com/arango-solutions/AWS_Ontology/releases/tag/v$1 [R=302,L]
+RewriteRule ^aws-ontology/([0-9]+\.[0-9]+\.[0-9]+)/?$ https://raw.githubusercontent.com/arango-solutions/AWS_Ontology/v$1/ontology/aws.ttl [R=303,L]
+
+# Current ontology: RDF/XML for OWL tools, the repository page for browsers, Turtle otherwise
+RewriteCond %{HTTP_ACCEPT} application/rdf\+xml
+RewriteRule ^aws-ontology/?$ https://raw.githubusercontent.com/arango-solutions/AWS_Ontology/main/ontology/aws.owl [R=303,L]
+RewriteCond %{HTTP_ACCEPT} text/html
+RewriteRule ^aws-ontology/?$ https://github.com/arango-solutions/AWS_Ontology [R=302,L]
+RewriteRule ^aws-ontology/?$ https://raw.githubusercontent.com/arango-solutions/AWS_Ontology/main/ontology/aws.ttl [R=303,L]

@@ -1,7 +1,9 @@
 FROM python:3.11-slim
 
 # Set metadata
-LABEL maintainer="Arthur Keen <aakeen@yahoo.com>"
+LABEL maintainer="Arango"
+LABEL org.opencontainers.image.source="https://github.com/arango-solutions/AWS_Ontology"
+LABEL org.opencontainers.image.licenses="MIT"
 LABEL description="AWS Ontology Monitoring Automation Container"
 LABEL version="1.0"
 
@@ -29,7 +31,6 @@ COPY . $PROJECT_DIR/
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install --no-cache-dir schedule
 
 # Create necessary directories
 RUN mkdir -p automation/logs automation/reports monitoring backups \
