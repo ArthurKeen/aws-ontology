@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.6.0] - 2026-10-26
 
-First release under the [arango-solutions](https://github.com/arango-solutions) GitHub
+First release under the [Arango Solutions](https://github.com/arango-solutions-org) GitHub
 organization, with a permanent namespace.
 
 ### Changed (breaking)
@@ -425,6 +425,6 @@ organization, with a permanent namespace.
 - Examples significantly expanded
 
 ## Links
-- [GitHub Releases](https://github.com/arango-solutions/AWS_Ontology/releases)
+- [GitHub Releases](https://github.com/arango-solutions-org/AWS_Ontology/releases)
 - [Contributing Guide](CONTRIBUTING.md)
 - [Maintenance Strategy](docs/MAINTENANCE_STRATEGY.md) 

@@ -1,6 +1,6 @@
 # AWS Ontology
 
-[![CI](https://github.com/arango-solutions/AWS_Ontology/actions/workflows/ci.yml/badge.svg)](https://github.com/arango-solutions/AWS_Ontology/actions/workflows/ci.yml)
+[![CI](https://github.com/arango-solutions-org/AWS_Ontology/actions/workflows/ci.yml/badge.svg)](https://github.com/arango-solutions-org/AWS_Ontology/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 A comprehensive semantic ontology for Amazon Web Services (AWS) resources and their relationships. This project provides a formal OWL ontology that models AWS infrastructure, services, and their complex interdependencies for advanced analysis, compliance monitoring, and automation. The AWS ontology can be used to bootstrap AWS graph projects for infrastructure mapping, security analysis, and cost optimization on graph databases that can ingest ontologies.  These include RDF databases that work natively with ontologies and property graph databases with RDF adapters, for example, it can be used with the [ArangoDB semantic layer integration](docs/ARANGODB_INTEGRATION.md) to generate ArangoDB graph schemas in different graph models such as Labeled Property Graphs (LPG) LPG, Property Graphs (PG) , and W3C Semantic Graphs (RDF).   
@@ -214,7 +214,7 @@ This approach allows you to choose the most appropriate representation for your 
 
 ```bash
 # Clone the repository
-git clone https://github.com/arango-solutions/AWS_Ontology.git
+git clone https://github.com/arango-solutions-org/AWS_Ontology.git
 cd AWS_Ontology
 
 # Option A (recommended): uv — creates .venv from the lockfile

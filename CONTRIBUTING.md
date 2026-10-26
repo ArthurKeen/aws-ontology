@@ -5,7 +5,7 @@ Thanks for helping improve the ontology. Issues and pull requests are welcome.
 ## Setup
 
 ```bash
-git clone https://github.com/arango-solutions/AWS_Ontology.git
+git clone https://github.com/arango-solutions-org/AWS_Ontology.git
 cd AWS_Ontology
 uv sync                 # Python 3.11+, installs runtime + dev dependencies
 uv run pre-commit install

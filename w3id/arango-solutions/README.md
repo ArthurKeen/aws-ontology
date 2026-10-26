@@ -1,11 +1,11 @@
 # arango-solutions
 
 Persistent identifiers for ontologies published by Arango
-(<https://github.com/arango-solutions>).
+(<https://github.com/arango-solutions-org>).
 
 | Path | Target |
 |---|---|
-| `/arango-solutions/aws-ontology` | AWS Ontology — <https://github.com/arango-solutions/AWS_Ontology> |
+| `/arango-solutions/aws-ontology` | AWS Ontology — <https://github.com/arango-solutions-org/AWS_Ontology> |
 
-Contacts: the maintainers of <https://github.com/arango-solutions/AWS_Ontology>
+Contacts: the maintainers of <https://github.com/arango-solutions-org/AWS_Ontology>
 (open an issue there).
