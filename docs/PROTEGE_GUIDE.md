@@ -16,7 +16,7 @@ open ontology/aws.owl
 **Method 2: Via Protégé Menu**
 1. Launch Protégé
 2. File → Open
-3. Navigate to: `/path/to/AWS_Ontology/ontology/aws.owl`
+3. Navigate to: `/path/to/aws-ontology/ontology/aws.owl`
 
 ## 📊 What You'll Find
 

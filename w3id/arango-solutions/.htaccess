@@ -11,21 +11,21 @@ RewriteEngine on
 
 # Example instances
 RewriteCond %{HTTP_ACCEPT} application/rdf\+xml
-RewriteRule ^aws-ontology/examples/?$ https://raw.githubusercontent.com/arango-solutions-org/AWS_Ontology/main/ontology/examples.ttl [R=303,L]
+RewriteRule ^aws-ontology/examples/?$ https://raw.githubusercontent.com/arango-solutions-org/aws-ontology/main/ontology/examples.ttl [R=303,L]
 RewriteCond %{HTTP_ACCEPT} text/html
-RewriteRule ^aws-ontology/examples/?$ https://github.com/arango-solutions-org/AWS_Ontology/blob/main/ontology/examples.ttl [R=302,L]
-RewriteRule ^aws-ontology/examples/?$ https://raw.githubusercontent.com/arango-solutions-org/AWS_Ontology/main/ontology/examples.ttl [R=303,L]
+RewriteRule ^aws-ontology/examples/?$ https://github.com/arango-solutions-org/aws-ontology/blob/main/ontology/examples.ttl [R=302,L]
+RewriteRule ^aws-ontology/examples/?$ https://raw.githubusercontent.com/arango-solutions-org/aws-ontology/main/ontology/examples.ttl [R=303,L]
 
 # Version IRIs, e.g. aws-ontology/0.6.0 -> the tagged release v0.6.0
 RewriteCond %{HTTP_ACCEPT} application/rdf\+xml
-RewriteRule ^aws-ontology/([0-9]+\.[0-9]+\.[0-9]+)/?$ https://raw.githubusercontent.com/arango-solutions-org/AWS_Ontology/v$1/ontology/aws.owl [R=303,L]
+RewriteRule ^aws-ontology/([0-9]+\.[0-9]+\.[0-9]+)/?$ https://raw.githubusercontent.com/arango-solutions-org/aws-ontology/v$1/ontology/aws.owl [R=303,L]
 RewriteCond %{HTTP_ACCEPT} text/html
-RewriteRule ^aws-ontology/([0-9]+\.[0-9]+\.[0-9]+)/?$ https://github.com/arango-solutions-org/AWS_Ontology/releases/tag/v$1 [R=302,L]
-RewriteRule ^aws-ontology/([0-9]+\.[0-9]+\.[0-9]+)/?$ https://raw.githubusercontent.com/arango-solutions-org/AWS_Ontology/v$1/ontology/aws.ttl [R=303,L]
+RewriteRule ^aws-ontology/([0-9]+\.[0-9]+\.[0-9]+)/?$ https://github.com/arango-solutions-org/aws-ontology/releases/tag/v$1 [R=302,L]
+RewriteRule ^aws-ontology/([0-9]+\.[0-9]+\.[0-9]+)/?$ https://raw.githubusercontent.com/arango-solutions-org/aws-ontology/v$1/ontology/aws.ttl [R=303,L]
 
 # Current ontology: RDF/XML for OWL tools, the repository page for browsers, Turtle otherwise
 RewriteCond %{HTTP_ACCEPT} application/rdf\+xml
-RewriteRule ^aws-ontology/?$ https://raw.githubusercontent.com/arango-solutions-org/AWS_Ontology/main/ontology/aws.owl [R=303,L]
+RewriteRule ^aws-ontology/?$ https://raw.githubusercontent.com/arango-solutions-org/aws-ontology/main/ontology/aws.owl [R=303,L]
 RewriteCond %{HTTP_ACCEPT} text/html
-RewriteRule ^aws-ontology/?$ https://github.com/arango-solutions-org/AWS_Ontology [R=302,L]
-RewriteRule ^aws-ontology/?$ https://raw.githubusercontent.com/arango-solutions-org/AWS_Ontology/main/ontology/aws.ttl [R=303,L]
+RewriteRule ^aws-ontology/?$ https://github.com/arango-solutions-org/aws-ontology [R=302,L]
+RewriteRule ^aws-ontology/?$ https://raw.githubusercontent.com/arango-solutions-org/aws-ontology/main/ontology/aws.ttl [R=303,L]

@@ -7,7 +7,7 @@
 # PATH=/usr/local/bin:/usr/bin:/bin
 # SHELL=/bin/bash
 # HOME=/home/yourusername
-# PROJECT_DIR=/path/to/AWS_Ontology
+# PROJECT_DIR=/path/to/aws-ontology
 
 # =====================================================
 # OPTION 1: Individual Cron Jobs (Simple)
@@ -88,10 +88,10 @@
 # HOME=/home/yourusername
 # 
 # # Project directory (adjust path as needed)
-# PROJECT_DIR=/path/to/AWS_Ontology
+# PROJECT_DIR=/path/to/aws-ontology
 # 
 # # Python virtual environment
-# VIRTUAL_ENV=/path/to/AWS_Ontology/venv
+# VIRTUAL_ENV=/path/to/aws-ontology/venv
 # 
 # # Email for cron job output (optional)
 # MAILTO=your-email@example.com

@@ -1,6 +1,6 @@
 [Unit]
 Description=AWS Ontology Monitoring Service
-Documentation=https://github.com/YOUR_USERNAME/AWS_Ontology
+Documentation=https://github.com/arango-solutions-org/aws-ontology
 After=network-online.target
 Wants=network-online.target
 
@@ -41,7 +41,7 @@ WantedBy=multi-user.target
 #
 # 2. Install the ontology project:
 #    sudo mkdir -p /opt/aws-ontology
-#    sudo cp -r /path/to/AWS_Ontology/* /opt/aws-ontology/
+#    sudo cp -r /path/to/aws-ontology/* /opt/aws-ontology/
 #    sudo chown -R ontology:ontology /opt/aws-ontology
 #
 # 3. Set up Python environment:

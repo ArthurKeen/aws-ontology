@@ -6,7 +6,7 @@ version: 0.6.0
 date-released: 2026-10-26
 license: MIT
 url: "https://w3id.org/arango-solutions/aws-ontology"
-repository-code: "https://github.com/arango-solutions-org/AWS_Ontology"
+repository-code: "https://github.com/arango-solutions-org/aws-ontology"
 authors:
   - family-names: Keen
     given-names: Arthur

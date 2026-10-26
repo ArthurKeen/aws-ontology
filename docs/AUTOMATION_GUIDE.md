@@ -103,8 +103,8 @@ cat automation/crontab_example.txt
 crontab -e
 
 # Add entries (adjust paths):
-0 9 * * * cd /path/to/AWS_Ontology && source venv/bin/activate && make monitor-changes
-0 8 * * 1 cd /path/to/AWS_Ontology && source venv/bin/activate && make monitor-weekly
+0 9 * * * cd /path/to/aws-ontology && source venv/bin/activate && make monitor-changes
+0 8 * * 1 cd /path/to/aws-ontology && source venv/bin/activate && make monitor-weekly
 ```
 
 **Features:**

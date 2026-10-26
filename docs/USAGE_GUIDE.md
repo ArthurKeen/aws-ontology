@@ -8,8 +8,8 @@ This guide provides step-by-step instructions for using all the tools and featur
 
 ```bash
 # Clone the repository (if not already done)
-git clone https://github.com/arango-solutions-org/AWS_Ontology.git
-cd AWS_Ontology
+git clone https://github.com/arango-solutions-org/aws-ontology.git
+cd aws-ontology
 
 # Set up Python virtual environment (required)
 python3 -m venv venv

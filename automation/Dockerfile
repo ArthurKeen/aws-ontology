@@ -2,7 +2,7 @@ FROM python:3.11-slim
 
 # Set metadata
 LABEL maintainer="Arango"
-LABEL org.opencontainers.image.source="https://github.com/arango-solutions-org/AWS_Ontology"
+LABEL org.opencontainers.image.source="https://github.com/arango-solutions-org/aws-ontology"
 LABEL org.opencontainers.image.licenses="MIT"
 LABEL description="AWS Ontology Monitoring Automation Container"
 LABEL version="1.0"

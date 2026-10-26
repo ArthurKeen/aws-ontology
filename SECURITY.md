@@ -9,7 +9,7 @@ examples.
 
 Please **do not** open a public issue. Use GitHub's private vulnerability reporting:
 **Security → Report a vulnerability** on
-<https://github.com/arango-solutions-org/AWS_Ontology/security>.
+<https://github.com/arango-solutions-org/aws-ontology/security>.
 
 We aim to acknowledge reports within five working days. If you find real AWS account
 identifiers, ARNs, or credentials anywhere in this repository, report them the same way.

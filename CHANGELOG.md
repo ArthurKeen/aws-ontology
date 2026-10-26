@@ -428,6 +428,6 @@ organization, with a permanent namespace.
 - Examples significantly expanded
 
 ## Links
-- [GitHub Releases](https://github.com/arango-solutions-org/AWS_Ontology/releases)
+- [GitHub Releases](https://github.com/arango-solutions-org/aws-ontology/releases)
 - [Contributing Guide](CONTRIBUTING.md)
 - [Maintenance Strategy](docs/MAINTENANCE_STRATEGY.md) 
