@@ -1,4 +1,4 @@
-@prefix : <http://www.semanticweb.org/aws-ontology#> .
+@prefix : <https://w3id.org/arango-solutions/aws-ontology#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -6,17 +6,20 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 
-<http://www.semanticweb.org/aws-ontology> a owl:Ontology ;
+<https://w3id.org/arango-solutions/aws-ontology> a owl:Ontology ;
     rdfs:label "AWS Resource Ontology" ;
-    rdfs:comment "An ontology for describing AWS resources, services, and their relationships." ;
-    owl:versionInfo "0.5.0" ;
+    rdfs:comment "An ontology for describing AWS resources, services, and their relationships. Not affiliated with or endorsed by Amazon Web Services; AWS service names are trademarks of Amazon.com, Inc. or its affiliates." ;
+    owl:versionIRI <https://w3id.org/arango-solutions/aws-ontology/0.6.0> ;
+    owl:versionInfo "0.6.0" ;
+    dcterms:publisher "Arango"@en ;
+    dcterms:license <https://opensource.org/license/mit> ;
     dcterms:source "AWS Service Documentation (docs.aws.amazon.com)"@en,
         "AWS API Reference documentation"@en,
         "AWS Whitepapers"@en ;
     dcterms:creator "Arthur Keen"@en ;
     dcterms:contributor "Claude (Anthropic) -- LLM-assisted authoring and verification"@en ;
     dcterms:created "2026-07-15"^^xsd:date ;
-    dcterms:modified "2026-08-13"^^xsd:date ;
+    dcterms:modified "2026-10-26"^^xsd:date ;
     dcterms:description "Authored from AWS public documentation and API reference knowledge -- NOT extracted from a fixed, ingested document corpus, and NOT derived from live AWS API introspection. Every resource type's real-ARN existence is individually checked against AWS's own IAM resource-type reference rather than assumed. Independently validated by OWL 2 DL reasoning, SHACL closed-world shape validation, and an automated test suite (see :provenanceMethod / :verificationMethod for a machine-readable summary)."@en ;
     :provenanceMethod "domain-knowledge-authored-and-verified" ;
     :verificationMethod "owl-dl-reasoning", "shacl-validation", "automated-test-suite" .
@@ -175,6 +178,7 @@
 :canAssumeRole a owl:ObjectProperty ;
     rdfs:label "can assume role" ;
     rdfs:comment "Relates an IAM principal (user or role) to an IAM role it is permitted to assume via sts:AssumeRole" ;
+    rdfs:domain :IAMEntity ;
     rdfs:range :IAMRole .
 
 :billingMode a owl:DatatypeProperty ;
@@ -204,8 +208,8 @@
 
 :cidrBlock a owl:DatatypeProperty ;
     rdfs:label "CIDR block" ;
-    rdfs:comment "Network CIDR block" ;
-    rdfs:domain :NetworkingResource ;
+    rdfs:comment "An IPv4 CIDR block: the address range of a network (VPC, subnet) or the range a security group rule or network ACL entry matches" ;
+    rdfs:domain :AWSResource ;
     rdfs:range xsd:string .
 
 :clusterHosts a owl:ObjectProperty ;
@@ -367,9 +371,8 @@
 
 :hasPermissionBoundary a owl:ObjectProperty ;
     rdfs:label "has permission boundary" ;
-    rdfs:comment "Relates IAM entities to their permission boundary policies" ;
-    rdfs:domain :IAMRole,
-        :IAMUser ;
+    rdfs:comment "Relates IAM entities (users and roles) to their permission boundary policies" ;
+    rdfs:domain :IAMEntity ;
     rdfs:range :IAMPermissionBoundary .
 
 :hasPolicy a owl:ObjectProperty ;
@@ -380,10 +383,8 @@
 
 :hasPolicyAttachment a owl:ObjectProperty ;
     rdfs:label "has policy attachment" ;
-    rdfs:comment "Relates IAM entities to their attached policies" ;
-    rdfs:domain :IAMGroup,
-        :IAMRole,
-        :IAMUser ;
+    rdfs:comment "Relates IAM identities (users, groups, roles) to their attached policies" ;
+    rdfs:domain :IAMIdentity ;
     rdfs:range :IAMPolicy .
 
 :hasSource a owl:ObjectProperty ;
@@ -959,12 +960,15 @@
 
 :hasResource a owl:ObjectProperty ;
     rdfs:label "has resource" ;
-    rdfs:comment "Relates an API Gateway to its resources",
-        "Relates policy statements to their target resources" ;
-    rdfs:domain :APIGateway,
-        :PolicyStatement ;
-    rdfs:range :APIGatewayResource,
-        :Resource .
+    rdfs:comment "Relates an API Gateway to its resources" ;
+    rdfs:domain :APIGateway ;
+    rdfs:range :APIGatewayResource .
+
+:hasStatementResource a owl:ObjectProperty ;
+    rdfs:label "has statement resource" ;
+    rdfs:comment "Relates an IAM policy statement to a resource (ARN pattern) in its Resource element" ;
+    rdfs:domain :PolicyStatement ;
+    rdfs:range :Resource .
 
 :hasRule a owl:ObjectProperty ;
     rdfs:label "has rule" ;
@@ -1098,10 +1102,20 @@
     rdfs:comment "A serverless container service using AWS Fargate" ;
     rdfs:subClassOf :ComputeResource .
 
+:IAMIdentity a owl:Class ;
+    rdfs:label "IAM Identity" ;
+    rdfs:comment "An IAM identity: a user, user group, or role -- the IAM resources that permission policies can be attached to" ;
+    rdfs:subClassOf :IdentityResource .
+
+:IAMEntity a owl:Class ;
+    rdfs:label "IAM Entity" ;
+    rdfs:comment "An IAM entity: a user or role -- the IAM identities that AWS authenticates and that can carry a permissions boundary" ;
+    rdfs:subClassOf :IAMIdentity .
+
 :IAMGroup a owl:Class ;
     rdfs:label "IAM Group" ;
     rdfs:comment "An IAM user group" ;
-    rdfs:subClassOf :IdentityResource .
+    rdfs:subClassOf :IAMIdentity .
 
 :ManagedPolicy a owl:Class ;
     rdfs:label "Managed Policy" ;
@@ -1201,7 +1215,7 @@
     rdfs:subClassOf [ a owl:Restriction ;
             owl:minCardinality "0"^^xsd:nonNegativeInteger ;
             owl:onProperty :memberOf ],
-        :IdentityResource .
+        :IAMEntity .
 
 :APIGatewayMethod a owl:Class ;
     rdfs:label "API Gateway Method" ;
@@ -1241,7 +1255,7 @@
     rdfs:subClassOf [ a owl:Restriction ;
             owl:minCardinality "1"^^xsd:nonNegativeInteger ;
             owl:onProperty :hasTrustRelationship ],
-        :IdentityResource .
+        :IAMEntity .
 
 :SQSQueue a owl:Class ;
     rdfs:label "SQS Queue" ;
@@ -1877,6 +1891,18 @@
 :usesContainerImage rdfs:subPropertyOf :uses .
 
 :hasNodeGroup rdfs:subPropertyOf :contains .
+
+:hasSecurityGroupRule a owl:ObjectProperty ;
+    rdfs:label "has security group rule" ;
+    rdfs:comment "Relates an EC2 security group to an inbound or outbound rule it contains" ;
+    rdfs:domain :EC2SecurityGroup ;
+    rdfs:range :SecurityGroupRule ;
+    rdfs:subPropertyOf :contains .
+
+:securityGroupRuleOf a owl:ObjectProperty ;
+    rdfs:label "security group rule of" ;
+    rdfs:comment "Inverse of has security group rule" ;
+    owl:inverseOf :hasSecurityGroupRule .
 
 :hasTaskDefinition rdfs:subPropertyOf :contains .
 

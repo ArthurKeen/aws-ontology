@@ -17,7 +17,7 @@ except ImportError:
 
 
 # Constants
-ONTOLOGY_NAMESPACE = "http://www.semanticweb.org/aws-ontology#"
+ONTOLOGY_NAMESPACE = "https://w3id.org/arango-solutions/aws-ontology#"
 TTL_FORMAT = "turtle"
 XML_FORMAT = "xml"
 OWL_FORMAT = "xml"

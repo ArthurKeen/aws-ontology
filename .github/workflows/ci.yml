@@ -24,14 +24,37 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.11", "3.14"]
+    services:
+      # Throwaway database for tests/test_arangodb_import.py (PRD REQ-020)
+      arangodb:
+        image: arangodb:3.12
+        env:
+          ARANGO_ROOT_PASSWORD: ci-only-password
+        ports:
+          - 8529:8529
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
         with:
           python-version: ${{ matrix.python-version }}
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
       - name: Install dependencies
         run: uv sync --frozen
-      - name: Run test suite
+      - name: Wait for ArangoDB
+        run: |
+          for i in $(seq 1 60); do
+            curl -sf -u root:ci-only-password http://127.0.0.1:8529/_api/version && exit 0
+            sleep 2
+          done
+          echo "ArangoDB did not become ready" && exit 1
+      - name: Run test suite (HermiT and ArangoDB import required)
+        env:
+          REQUIRE_REASONER: "1"
+          ARANGO_TEST_HOST: http://127.0.0.1:8529
+          ARANGO_PASSWORD: ci-only-password
         run: uv run pytest -v
       - name: Verify TTL/OWL synchronization
         run: uv run python tools/sync_formats.py check

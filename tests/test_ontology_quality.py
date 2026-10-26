@@ -30,7 +30,7 @@ class TestOntologyQuality(BaseOntologyTest):
     def test_ontology_metadata(self):
         """Test that ontology has proper metadata."""
         # Check ontology declaration exists
-        ontology_uri = URIRef("http://www.semanticweb.org/aws-ontology")
+        ontology_uri = URIRef("https://w3id.org/arango-solutions/aws-ontology")
         self.assertTrue(
             (ontology_uri, RDF.type, OWL.Ontology) in self.graph, "Ontology declaration not found"
         )
@@ -138,6 +138,7 @@ class TestOntologyQuality(BaseOntologyTest):
                 "repositoryContains",
                 "resourceOf",
                 "ruleOf",
+                "securityGroupRuleOf",
                 "stageOf",
                 "stepFunctionTriggeredBy",
                 "targetOf",

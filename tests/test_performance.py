@@ -104,7 +104,7 @@ class TestOntologyPerformance(BaseOntologyTest):
             """,
             # Find all IAM classes
             """
-            PREFIX aws: <http://www.semanticweb.org/aws-ontology#>
+            PREFIX aws: <https://w3id.org/arango-solutions/aws-ontology#>
             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
             SELECT ?class WHERE {
                 ?class rdfs:subClassOf* aws:IdentityResource .
@@ -135,7 +135,7 @@ class TestOntologyPerformance(BaseOntologyTest):
 
         # Complex query: Find all IAM users with their groups and policies
         complex_query = """
-        PREFIX aws: <http://www.semanticweb.org/aws-ontology#>
+        PREFIX aws: <https://w3id.org/arango-solutions/aws-ontology#>
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
         
         SELECT ?user ?userLabel ?group ?groupLabel ?policy ?policyLabel WHERE {

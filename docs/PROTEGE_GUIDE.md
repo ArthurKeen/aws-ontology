@@ -94,7 +94,7 @@ open ontology/aws.owl
 
 ```sparql
 # Find all container services
-PREFIX : <http://www.semanticweb.org/aws-ontology#>
+PREFIX : <https://w3id.org/arango-solutions/aws-ontology#>
 SELECT ?service WHERE {
   ?service rdfs:subClassOf* :ComputeResource .
   ?service rdfs:label ?label .
@@ -102,13 +102,13 @@ SELECT ?service WHERE {
 }
 
 # Find services that can trigger Step Functions
-PREFIX : <http://www.semanticweb.org/aws-ontology#>
+PREFIX : <https://w3id.org/arango-solutions/aws-ontology#>
 SELECT ?service ?stepFunction WHERE {
   ?service :triggersStepFunction ?stepFunction
 }
 
 # Find all cost-related properties
-PREFIX : <http://www.semanticweb.org/aws-ontology#>
+PREFIX : <https://w3id.org/arango-solutions/aws-ontology#>
 SELECT ?property WHERE {
   ?property rdfs:label ?label .
   FILTER(CONTAINS(LCASE(?label), "cost") || CONTAINS(LCASE(?label), "billing"))

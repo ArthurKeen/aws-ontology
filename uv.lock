@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.11"
 resolution-markers = [
     "python_full_version >= '3.12'",
@@ -67,48 +67,48 @@ wheels = [
 
 [[package]]
 name = "aws-ontology"
-version = "0.4.2"
+version = "0.6.0"
 source = { virtual = "." }
 dependencies = [
-    { name = "anthropic" },
     { name = "arango-rdf" },
     { name = "feedparser" },
-    { name = "owlready2" },
     { name = "pyshacl" },
     { name = "python-arango" },
     { name = "rdflib" },
-    { name = "requests" },
     { name = "schedule" },
 ]
 
 [package.dev-dependencies]
 dev = [
     { name = "coverage" },
+    { name = "owlready2" },
     { name = "pre-commit" },
     { name = "pytest" },
     { name = "ruff" },
 ]
+monitor = [
+    { name = "anthropic" },
+]
 
 [package.metadata]
 requires-dist = [
-    { name = "anthropic", specifier = ">=0.68.0" },
     { name = "arango-rdf", specifier = ">=2.0.0" },
     { name = "feedparser", specifier = ">=6.0.0" },
-    { name = "owlready2", specifier = ">=0.45" },
     { name = "pyshacl", specifier = ">=0.25" },
     { name = "python-arango", specifier = ">=7.5.0" },
     { name = "rdflib", specifier = ">=6.0.0" },
-    { name = "requests", specifier = ">=2.28.0" },
     { name = "schedule", specifier = ">=1.2.0" },
 ]
 
 [package.metadata.requires-dev]
 dev = [
     { name = "coverage", specifier = ">=7.0" },
+    { name = "owlready2", specifier = ">=0.45" },
     { name = "pre-commit", specifier = ">=3.6" },
     { name = "pytest", specifier = ">=8.0" },
     { name = "ruff", specifier = ">=0.8" },
 ]
+monitor = [{ name = "anthropic", specifier = ">=0.120.2" }]
 
 [[package]]
 name = "certifi"

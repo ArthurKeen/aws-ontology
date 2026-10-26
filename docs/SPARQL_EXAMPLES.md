@@ -8,7 +8,7 @@ These SPARQL queries demonstrate the power of your enhanced AWS Ontology. Use th
 
 ### 1. List All Classes
 ```sparql
-PREFIX : <http://www.semanticweb.org/aws-ontology#>
+PREFIX : <https://w3id.org/arango-solutions/aws-ontology#>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
@@ -21,7 +21,7 @@ ORDER BY ?label
 
 ### 2. Find All Container Services
 ```sparql
-PREFIX : <http://www.semanticweb.org/aws-ontology#>
+PREFIX : <https://w3id.org/arango-solutions/aws-ontology#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?service ?label WHERE {
@@ -38,7 +38,7 @@ SELECT ?service ?label WHERE {
 
 ### 3. API & Integration Services
 ```sparql
-PREFIX : <http://www.semanticweb.org/aws-ontology#>
+PREFIX : <https://w3id.org/arango-solutions/aws-ontology#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?service ?label WHERE {
@@ -59,7 +59,7 @@ SELECT ?service ?label WHERE {
 
 ### 4. Services That Can Trigger Step Functions
 ```sparql
-PREFIX : <http://www.semanticweb.org/aws-ontology#>
+PREFIX : <https://w3id.org/arango-solutions/aws-ontology#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?service ?stepFunction WHERE {
@@ -71,7 +71,7 @@ SELECT ?service ?stepFunction WHERE {
 
 ### 5. Container Orchestration Relationships
 ```sparql
-PREFIX : <http://www.semanticweb.org/aws-ontology#>
+PREFIX : <https://w3id.org/arango-solutions/aws-ontology#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?service ?cluster ?taskDef WHERE {
@@ -84,7 +84,7 @@ SELECT ?service ?cluster ?taskDef WHERE {
 
 ### 6. Event-Driven Architecture Components
 ```sparql
-PREFIX : <http://www.semanticweb.org/aws-ontology#>
+PREFIX : <https://w3id.org/arango-solutions/aws-ontology#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?publisher ?topic ?subscriber WHERE {
@@ -100,7 +100,7 @@ SELECT ?publisher ?topic ?subscriber WHERE {
 
 ### 7. Resource Creation Timeline
 ```sparql
-PREFIX : <http://www.semanticweb.org/aws-ontology#>
+PREFIX : <https://w3id.org/arango-solutions/aws-ontology#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?older ?newer WHERE {
@@ -112,7 +112,7 @@ SELECT ?older ?newer WHERE {
 
 ### 8. Migration Relationships
 ```sparql
-PREFIX : <http://www.semanticweb.org/aws-ontology#>
+PREFIX : <https://w3id.org/arango-solutions/aws-ontology#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?source ?target WHERE {
@@ -124,7 +124,7 @@ SELECT ?source ?target WHERE {
 
 ### 9. Resource Replacement History
 ```sparql
-PREFIX : <http://www.semanticweb.org/aws-ontology#>
+PREFIX : <https://w3id.org/arango-solutions/aws-ontology#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?oldResource ?newResource WHERE {
@@ -138,7 +138,7 @@ SELECT ?oldResource ?newResource WHERE {
 
 ### 10. Cost Allocation Relationships
 ```sparql
-PREFIX : <http://www.semanticweb.org/aws-ontology#>
+PREFIX : <https://w3id.org/arango-solutions/aws-ontology#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?charger ?charged WHERE {
@@ -150,7 +150,7 @@ SELECT ?charger ?charged WHERE {
 
 ### 11. Resource Optimization Chains
 ```sparql
-PREFIX : <http://www.semanticweb.org/aws-ontology#>
+PREFIX : <https://w3id.org/arango-solutions/aws-ontology#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?optimizer ?optimized WHERE {
@@ -162,7 +162,7 @@ SELECT ?optimizer ?optimized WHERE {
 
 ### 12. Shared Resource Networks
 ```sparql
-PREFIX : <http://www.semanticweb.org/aws-ontology#>
+PREFIX : <https://w3id.org/arango-solutions/aws-ontology#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?resource1 ?resource2 WHERE {
@@ -176,7 +176,7 @@ SELECT ?resource1 ?resource2 WHERE {
 
 ### 13. Compliance Status Overview
 ```sparql
-PREFIX : <http://www.semanticweb.org/aws-ontology#>
+PREFIX : <https://w3id.org/arango-solutions/aws-ontology#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?resource ?standard ?status WHERE {
@@ -188,7 +188,7 @@ SELECT ?resource ?standard ?status WHERE {
 
 ### 14. Audit Relationships
 ```sparql
-PREFIX : <http://www.semanticweb.org/aws-ontology#>
+PREFIX : <https://w3id.org/arango-solutions/aws-ontology#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?auditor ?audited WHERE {
@@ -200,7 +200,7 @@ SELECT ?auditor ?audited WHERE {
 
 ### 15. Control & Governance Hierarchy
 ```sparql
-PREFIX : <http://www.semanticweb.org/aws-ontology#>
+PREFIX : <https://w3id.org/arango-solutions/aws-ontology#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?controller ?controlled WHERE {
@@ -214,7 +214,7 @@ SELECT ?controller ?controlled WHERE {
 
 ### 16. All Object Properties with Domains and Ranges
 ```sparql
-PREFIX : <http://www.semanticweb.org/aws-ontology#>
+PREFIX : <https://w3id.org/arango-solutions/aws-ontology#>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
@@ -229,7 +229,7 @@ ORDER BY ?label
 
 ### 17. Functional Properties
 ```sparql
-PREFIX : <http://www.semanticweb.org/aws-ontology#>
+PREFIX : <https://w3id.org/arango-solutions/aws-ontology#>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
@@ -241,7 +241,7 @@ SELECT ?property ?label WHERE {
 
 ### 18. Transitive Properties
 ```sparql
-PREFIX : <http://www.semanticweb.org/aws-ontology#>
+PREFIX : <https://w3id.org/arango-solutions/aws-ontology#>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
@@ -255,7 +255,7 @@ SELECT ?property ?label WHERE {
 
 ### 19. Classes with Cardinality Restrictions
 ```sparql
-PREFIX : <http://www.semanticweb.org/aws-ontology#>
+PREFIX : <https://w3id.org/arango-solutions/aws-ontology#>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
@@ -275,7 +275,7 @@ SELECT ?class ?property ?cardinality WHERE {
 
 ### 20. Disjoint Class Groups
 ```sparql
-PREFIX : <http://www.semanticweb.org/aws-ontology#>
+PREFIX : <https://w3id.org/arango-solutions/aws-ontology#>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
@@ -292,7 +292,7 @@ SELECT ?class1 ?class2 WHERE {
 
 ### 21. Count Resources by Type
 ```sparql
-PREFIX : <http://www.semanticweb.org/aws-ontology#>
+PREFIX : <https://w3id.org/arango-solutions/aws-ontology#>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
@@ -307,7 +307,7 @@ ORDER BY DESC(?count)
 
 ### 22. Verify Ontology Completeness
 ```sparql
-PREFIX : <http://www.semanticweb.org/aws-ontology#>
+PREFIX : <https://w3id.org/arango-solutions/aws-ontology#>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 
 SELECT 

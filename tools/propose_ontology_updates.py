@@ -110,10 +110,17 @@ def call_claude(prompt: str) -> dict:
     import anthropic
 
     client = anthropic.Anthropic()
-    response = client.messages.create(
-        model="claude-opus-5",
-        max_tokens=8000,
-        output_config={"format": {"type": "json_schema", "schema": FINDINGS_SCHEMA}},
+    # fallbacks="default": if a safety classifier declines, the API re-runs the request on a
+    # suitable fallback model within the same call instead of stopping with a refusal.
+    response = client.beta.messages.create(
+        model="claude-opus-5-5",
+        max_tokens=16000,
+        betas=["server-side-fallback-2026-07-01"],
+        fallbacks="default",
+        output_config={
+            "effort": "medium",
+            "format": {"type": "json_schema", "schema": FINDINGS_SCHEMA},
+        },
         messages=[{"role": "user", "content": prompt}],
     )
     if response.stop_reason == "refusal":

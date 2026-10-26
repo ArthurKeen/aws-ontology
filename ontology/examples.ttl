@@ -1,12 +1,15 @@
-@prefix : <http://www.semanticweb.org/aws-ontology#> .
+@prefix : <https://w3id.org/arango-solutions/aws-ontology#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-# Import the AWS Ontology
-<http://www.semanticweb.org/aws-ontology> a owl:Ontology ;
-    owl:imports <file:aws.owl> .
+# Example instances, published as their own ontology importing the AWS Ontology.
+# Protégé resolves the import locally via ontology/catalog-v001.xml.
+<https://w3id.org/arango-solutions/aws-ontology/examples> a owl:Ontology ;
+    rdfs:label "AWS Resource Ontology -- example instances" ;
+    rdfs:comment "Sanitized, fictional example AWS resources (account 123456789012 is AWS's documented placeholder) illustrating the AWS Ontology." ;
+    owl:imports <https://w3id.org/arango-solutions/aws-ontology> .
 
 # Example AWS Account Structure
 :ProductionAccount rdf:type :AWSAccount ;
@@ -227,7 +230,7 @@
     rdfs:label "Allow EC2 Describe" ;
     :hasEffect :Allow ;
     :hasAction :EC2DescribeAction ;
-    :hasResource :AllResourcesWildcard .
+    :hasStatementResource :AllResourcesWildcard .
 
 :Allow rdf:type :Effect ;
     rdfs:label "Allow" .
@@ -351,8 +354,8 @@
 # Container Service Relationships with VPC and Security
 :WebApplicationService :belongsToVPC :ProductionVPC .
 :ProductionEKSCluster :belongsToVPC :ProductionVPC .
-:WebApplicationService :appliesTo :WebAppSecurityGroup .
-:ProductionEKSCluster :appliesTo :EKSClusterSecurityGroup .
+:WebAppSecurityGroup :appliesTo :WebApplicationService .
+:EKSClusterSecurityGroup :appliesTo :ProductionEKSCluster .
 
 :WebAppSecurityGroup rdf:type :EC2SecurityGroup ;
     rdfs:label "Web App Security Group" ;
@@ -822,7 +825,7 @@
     :fromPort "443"^^xsd:integer ;
     :toPort "443"^^xsd:integer ;
     :cidrBlock "0.0.0.0/0"^^xsd:string ;
-    :memberOf :WebAppSecurityGroup ;
+    :securityGroupRuleOf :WebAppSecurityGroup ;
     :environment "production" .
 
 # Examples for Missing Identity Services
@@ -919,44 +922,44 @@
     rdfs:label "Allow Security Audit Actions" ;
     :hasEffect :Allow ;
     :hasAction :SecurityHubGetAction, :SecurityHubListAction, :CloudTrailLookupEventsAction ;
-    :hasResource :AllResourcesWildcard .
+    :hasStatementResource :AllResourcesWildcard .
 
 :AllowECSTaskExecutionActions rdf:type :PolicyStatement ;
     rdfs:label "Allow ECS Task Execution Actions" ;
     :hasEffect :Allow ;
     :hasAction :ECRGetAuthorizationTokenAction, :ECRBatchCheckLayerAvailabilityAction,
         :ECRGetDownloadUrlForLayerAction, :ECRBatchGetImageAction ;
-    :hasResource :AllResourcesWildcard .
+    :hasStatementResource :AllResourcesWildcard .
 
 :AllowEC2BasicAccessActions rdf:type :PolicyStatement ;
     rdfs:label "Allow EC2 Basic Access Actions" ;
     :hasEffect :Allow ;
     :hasAction :EC2DescribeInstancesAction, :EC2DescribeImagesAction, :EC2DescribeKeyPairsAction ;
-    :hasResource :AllResourcesWildcard .
+    :hasStatementResource :AllResourcesWildcard .
 
 :AllowIAMAuditActions rdf:type :PolicyStatement ;
     rdfs:label "Allow IAM Audit Actions" ;
     :hasEffect :Allow ;
     :hasAction :IAMListAction, :IAMGetAction, :IAMGenerateAction ;
-    :hasResource :AllResourcesWildcard .
+    :hasStatementResource :AllResourcesWildcard .
 
 :AllowAPIGatewayExecutionActions rdf:type :PolicyStatement ;
     rdfs:label "Allow API Gateway Execution Actions" ;
     :hasEffect :Allow ;
     :hasAction :LambdaInvokeFunctionAction, :StatesStartExecutionAction ;
-    :hasResource :AllResourcesWildcard .
+    :hasStatementResource :AllResourcesWildcard .
 
 :AllowStepFunctionExecutionActions rdf:type :PolicyStatement ;
     rdfs:label "Allow Step Function Execution Actions" ;
     :hasEffect :Allow ;
     :hasAction :LambdaInvokeFunctionAction, :SNSPublishAction, :SQSSendMessageAction ;
-    :hasResource :AllResourcesWildcard .
+    :hasStatementResource :AllResourcesWildcard .
 
 :AllowEventBridgeExecutionActions rdf:type :PolicyStatement ;
     rdfs:label "Allow EventBridge Execution Actions" ;
     :hasEffect :Allow ;
     :hasAction :SNSPublishAction, :SQSSendMessageAction, :LambdaInvokeFunctionAction ;
-    :hasResource :AllResourcesWildcard .
+    :hasStatementResource :AllResourcesWildcard .
 
 :SecurityHubGetAction rdf:type :Action ;
     rdfs:label "security-hub:Get*" .

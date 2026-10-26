@@ -66,7 +66,7 @@ class TestExamplesValidation(BaseOntologyTest):
         for _subject, predicate, obj in self.examples:
             if predicate == RDF.type:
                 # Check if the type is defined as a class in the ontology
-                if str(obj).startswith("http://www.semanticweb.org/aws-ontology#"):
+                if str(obj).startswith("https://w3id.org/arango-solutions/aws-ontology#"):
                     self.assertTrue(
                         (obj, RDF.type, OWL.Class) in self.ontology,
                         f"Type {obj} used in examples but not defined as class in ontology",
@@ -82,7 +82,7 @@ class TestExamplesValidation(BaseOntologyTest):
 
         # Check that each property is defined in ontology
         for prop in example_properties:
-            if str(prop).startswith("http://www.semanticweb.org/aws-ontology#"):
+            if str(prop).startswith("https://w3id.org/arango-solutions/aws-ontology#"):
                 is_object_prop = (prop, RDF.type, OWL.ObjectProperty) in self.ontology
                 is_data_prop = (prop, RDF.type, OWL.DatatypeProperty) in self.ontology
 
@@ -192,7 +192,7 @@ class TestExamplesValidation(BaseOntologyTest):
         for s, p, o in self.examples:
             # If it's an object property and object starts with our namespace
             if (p, RDF.type, OWL.ObjectProperty) in self.ontology:
-                if str(o).startswith("http://www.semanticweb.org/aws-ontology#"):
+                if str(o).startswith("https://w3id.org/arango-solutions/aws-ontology#"):
                     # Object should exist as a subject somewhere
                     referenced_subjects = list(self.examples.subjects(None, None))
                     self.assertIn(

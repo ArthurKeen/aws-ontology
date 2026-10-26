@@ -19,6 +19,8 @@ permissions:
 
 jobs:
   check-for-updates:
+    # Run only in the primary repository; mirrors would open duplicate PRs and spend API credits.
+    if: github.repository == 'arango-solutions/AWS_Ontology'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,7 +30,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: uv sync --frozen
+        run: uv sync --frozen --group monitor
 
       - name: Check for new AWS services
         id: monitor

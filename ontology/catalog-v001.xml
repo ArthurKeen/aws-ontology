@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Lets Protégé (and other OASIS-catalog-aware tools) resolve the ontology IRIs to the
+     local files, so examples.ttl's owl:imports works offline. -->
+<catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <uri name="https://w3id.org/arango-solutions/aws-ontology" uri="aws.owl"/>
+    <uri name="https://w3id.org/arango-solutions/aws-ontology/0.6.0" uri="aws.owl"/>
+</catalog>

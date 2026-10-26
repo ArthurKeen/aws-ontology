@@ -1,21 +1,19 @@
 [project]
 name = "aws-ontology"
-version = "0.4.2"
+version = "0.6.0"
 description = "Formal OWL 2 ontology of AWS resources and their relationships, with synchronization, validation, and ArangoDB integration tooling"
 readme = "README.md"
 license = { text = "MIT" }
 authors = [{ name = "Arthur Keen" }]
+maintainers = [{ name = "Arango" }]
 requires-python = ">=3.11"
 dependencies = [
     "rdflib>=6.0.0",
-    "owlready2>=0.45",
     "feedparser>=6.0.0",
-    "requests>=2.28.0",
     "schedule>=1.2.0",
     "arango-rdf>=2.0.0",
     "python-arango>=7.5.0",
     "pyshacl>=0.25",
-    "anthropic>=0.68.0",
 ]
 
 [dependency-groups]
@@ -24,6 +22,12 @@ dev = [
     "ruff>=0.8",
     "coverage>=7.0",
     "pre-commit>=3.6",
+    # HermiT OWL 2 DL reasoner for tests/test_consistency.py (needs a Java runtime)
+    "owlready2>=0.45",
+]
+# Agentic ontology-coverage monitor (tools/propose_ontology_updates.py): `uv sync --group monitor`
+monitor = [
+    "anthropic>=0.120.2",
 ]
 
 # This repo is an ontology plus operational scripts, not an importable library —

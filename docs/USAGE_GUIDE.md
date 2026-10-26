@@ -8,7 +8,7 @@ This guide provides step-by-step instructions for using all the tools and featur
 
 ```bash
 # Clone the repository (if not already done)
-git clone https://github.com/YOUR_USERNAME/AWS_Ontology.git
+git clone https://github.com/arango-solutions/AWS_Ontology.git
 cd AWS_Ontology
 
 # Set up Python virtual environment (required)
@@ -51,7 +51,7 @@ make help
 - **VS Code**: With Turtle/RDF extensions
 
 **File Formats:**
-- `ontology/aws.owl` - Standard OWL/XML format
+- `ontology/aws.owl` - RDF/XML serialization (generated from aws.ttl)
 - `ontology/aws.ttl` - Human-readable Turtle format
 - `ontology/examples.ttl` - Example instances
 
@@ -180,7 +180,7 @@ Affected Services:
 docker run -d \
   --name arangodb \
   -p 8529:8529 \
-  -e ARANGO_ROOT_PASSWORD=${ARANGO_PASSWORD:-openSesame} \
+  -e ARANGO_ROOT_PASSWORD="${ARANGO_PASSWORD:?set ARANGO_PASSWORD first}" \
   arangodb/arangodb:latest
 
 # Verify ArangoDB is running
@@ -195,7 +195,7 @@ curl http://localhost:8529/_api/version
 docker run -d \
   --name arangodb-ee \
   -p 8529:8529 \
-  -e ARANGO_ROOT_PASSWORD=${ARANGO_PASSWORD:-openSesame} \
+  -e ARANGO_ROOT_PASSWORD="${ARANGO_PASSWORD:?set ARANGO_PASSWORD first}" \
   -e ARANGO_LICENSE_KEY=your-license-key \
   arangodb/enterprise:latest
 ```
@@ -448,7 +448,7 @@ from rdflib import Graph
 g = Graph()
 g.parse('ontology/aws.ttl', format='turtle')
 result = g.query('''
-PREFIX aws: <http://www.semanticweb.org/aws-ontology#>
+PREFIX aws: <https://w3id.org/arango-solutions/aws-ontology#>
 SELECT ?class ?label WHERE {
     ?class a owl:Class ;
            rdfs:label ?label .

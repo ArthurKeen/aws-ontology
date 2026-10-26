@@ -1,4 +1,4 @@
-@prefix : <http://www.semanticweb.org/aws-ontology#> .
+@prefix : <https://w3id.org/arango-solutions/aws-ontology#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 

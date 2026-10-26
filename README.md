@@ -1,29 +1,43 @@
 # AWS Ontology
 
-[![CI](https://github.com/ArthurKeen/AWS_Ontology/actions/workflows/ci.yml/badge.svg)](https://github.com/ArthurKeen/AWS_Ontology/actions/workflows/ci.yml)
+[![CI](https://github.com/arango-solutions/AWS_Ontology/actions/workflows/ci.yml/badge.svg)](https://github.com/arango-solutions/AWS_Ontology/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 A comprehensive semantic ontology for Amazon Web Services (AWS) resources and their relationships. This project provides a formal OWL ontology that models AWS infrastructure, services, and their complex interdependencies for advanced analysis, compliance monitoring, and automation. The AWS ontology can be used to bootstrap AWS graph projects for infrastructure mapping, security analysis, and cost optimization on graph databases that can ingest ontologies.  These include RDF databases that work natively with ontologies and property graph databases with RDF adapters, for example, it can be used with the [ArangoDB semantic layer integration](docs/ARANGODB_INTEGRATION.md) to generate ArangoDB graph schemas in different graph models such as Labeled Property Graphs (LPG) LPG, Property Graphs (PG) , and W3C Semantic Graphs (RDF).   
 
 ## Overview
 
-The AWS Ontology is a production-ready semantic web resource that:
+The AWS Ontology is a semantic web resource that:
 
-- **Models 142 AWS resource types** across compute, storage, networking, containers, API services, generative AI, workforce identity, governance, detective security, DNS, caching, and analytics
-- **Defines 251 relationships** including temporal, cost, and compliance associations
-- **Provides comprehensive examples** with real-world AWS configurations
-- **Supports multiple formats** (OWL/XML, Turtle, with format synchronization)
-- **Includes semantic constraints** (cardinality, disjoint classes, property characteristics)
-- **Offers testing framework** for quality assurance and validation
+- **Models 162 AWS resource classes** across compute, storage, networking, containers, API services, generative AI, workforce and consumer identity, governance, detective security, DNS, caching, analytics, and deployment
+- **Defines 156 object properties and 119 datatype properties**, including temporal, cost, and compliance relationships
+- **Ships 207 example instances** with sanitized, realistic AWS configurations
+- **Is published in two synchronized serializations** (Turtle and RDF/XML), verified triple-for-triple identical
+- **Includes semantic constraints** (cardinality restrictions, disjoint categories, inverse and sub-properties) and SHACL shapes for closed-world validation of instance data
+- **Is verified in CI** by the HermiT OWL 2 DL reasoner (ontology + examples are consistent), SHACL validation, and a test suite
 
 ## Current Metrics
 
-| Metric | Count | Recent Growth |
-|--------|-------|---------------|
-| **Total Triples** | 2,199 | +18 triples (ontology-level provenance metadata) |
-| **Classes** | 160 | +3 new classes (Cognito federation providers) |
-| **Object Properties** | 153 | +2 new properties |
-| **Data Properties** | 119 | +1 new property |
-| **Example Instances** | 207 | typed individuals in examples.ttl |
+| Metric | Count |
+|--------|-------|
+| **Total Triples** | 2,220 |
+| **Classes** | 162 |
+| **Object Properties** | 156 |
+| **Datatype Properties** | 119 |
+| **Example Instances** | 207 |
+
+## Namespace and Versioning
+
+| | IRI |
+|---|---|
+| Ontology | `https://w3id.org/arango-solutions/aws-ontology` |
+| Term namespace | `https://w3id.org/arango-solutions/aws-ontology#` (prefix `aws:`) |
+| This version | `https://w3id.org/arango-solutions/aws-ontology/0.6.0` |
+| Examples | `https://w3id.org/arango-solutions/aws-ontology/examples` |
+
+Releases follow [Semantic Versioning](https://semver.org/); `owl:versionInfo` matches the latest
+[CHANGELOG](CHANGELOG.md) release. Versions before 0.6.0 used the provisional namespace
+`http://www.semanticweb.org/aws-ontology#` — see the CHANGELOG for migration notes.
 
 ## Quick Example
 
@@ -31,7 +45,7 @@ Get started in 30 seconds - here's how to query AWS resources using SPARQL:
 
 ```sparql
 # Find all resources and their encryption status
-PREFIX aws: <http://www.semanticweb.org/aws-ontology#>
+PREFIX aws: <https://w3id.org/arango-solutions/aws-ontology#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?resource ?label ?encrypted WHERE {
@@ -50,7 +64,7 @@ g.parse("ontology/examples.ttl", format="turtle")
 
 # Execute SPARQL query
 results = g.query("""
-    PREFIX aws: <http://www.semanticweb.org/aws-ontology#>
+    PREFIX aws: <https://w3id.org/arango-solutions/aws-ontology#>
     SELECT ?service ?depends_on WHERE {
         ?service aws:dependsOn ?depends_on .
     }
@@ -61,22 +75,14 @@ for row in results:
 ```
 
 ```javascript
-// AQL example using ArangoDB Property Graph (PG)
-// Find running EC2 instances and their VPCs with cost analysis
-FOR instance IN ec2_instances
-    FILTER instance.state == "running"
-    
-    FOR vpc IN 1..1 OUTBOUND instance belongs_to_vpc
-        LET totalCost = SUM(
-            FOR resource IN 1..3 OUTBOUND vpc contains, runs_in, uses
-                RETURN resource.monthlyCost || 0
-        )
-        
+// AQL example after importing ontology + examples with tools/import_to_arangodb.py
+// (ArangoRDF PGT: one collection per RDF class, one edge collection per object property)
+FOR instance IN EC2Instance
+    FOR vpc IN 1..1 OUTBOUND instance belongsToVPC
         RETURN {
-            instance: instance.instanceId,
-            vpc: vpc.vpcId,
-            instanceType: instance.instanceType,
-            estimatedMonthlyCost: totalCost
+            instance: instance._label,
+            arn: instance.arn,
+            vpc: vpc._label
         }
 ```
 
@@ -199,7 +205,7 @@ This approach allows you to choose the most appropriate representation for your 
 ## Quick Start
 
 ### Prerequisites
-- Python 3.8+
+- Python 3.11+
 - RDF processing tools (rdflib)
 - Optional: Protégé for visual exploration
 - Optional: ArangoDB for graph database integration
@@ -208,7 +214,7 @@ This approach allows you to choose the most appropriate representation for your 
 
 ```bash
 # Clone the repository
-git clone https://github.com/ArthurKeen/AWS_Ontology.git
+git clone https://github.com/arango-solutions/AWS_Ontology.git
 cd AWS_Ontology
 
 # Option A (recommended): uv — creates .venv from the lockfile
@@ -231,9 +237,11 @@ python -m pytest
 ```
 AWS_Ontology/
 ├── ontology/
-│   ├── aws.owl           # Main ontology (OWL/XML format)
-│   ├── aws.ttl           # Turtle format (human-readable)
-│   └── examples.ttl      # Real-world example instances
+│   ├── aws.ttl           # Main ontology, Turtle (the editing source)
+│   ├── aws.owl           # Main ontology, RDF/XML (generated from aws.ttl)
+│   ├── aws.shapes.ttl    # SHACL shapes for instance-data validation
+│   ├── examples.ttl      # Sanitized example instances
+│   └── catalog-v001.xml  # Maps ontology IRIs to local files (Protégé)
 ├── docs/
 │   ├── PRD.md           # Product Requirements Document
 │   ├── PROTEGE_GUIDE.md # Protégé exploration guide
@@ -257,8 +265,8 @@ open ontology/aws.owl
 ```
 
 **Key Protégé Features:**
-- **Class Hierarchy**: Browse 160 AWS resource classes
-- **Object Properties**: Explore 139 relationship types
+- **Class Hierarchy**: Browse 162 AWS resource classes
+- **Object Properties**: Explore 156 relationship types
 - **Reasoning**: Validate with HermiT reasoner
 - **OntoGraf**: Visualize relationships graphically
 - **SPARQL**: Test queries from our examples
@@ -271,7 +279,7 @@ The ontology supports rich SPARQL queries for analysis:
 
 ```sparql
 # Find all container services
-PREFIX : <http://www.semanticweb.org/aws-ontology#>
+PREFIX : <https://w3id.org/arango-solutions/aws-ontology#>
 SELECT ?service ?label WHERE {
   ?service rdfs:subClassOf* :ComputeResource .
   ?service rdfs:label ?label .
@@ -360,6 +368,7 @@ Comprehensive testing ensures ontology quality:
 - **Example Validation**: Instance integrity
 - **Performance**: Loading and query benchmarks
 - **DL Compliance**: OWL 2 DL profile checks (undeclared terms, illegal axioms)
+- **Consistency**: HermiT reasoner over ontology + examples, plus a fast disjointness-clash check
 - **Tool Smoke Tests**: every CLI must start up and answer `--help`
 
 All of the above run in GitHub Actions CI on every push and pull request.
@@ -388,12 +397,7 @@ make test-smoke    # CLI smoke tests
 6. Update documentation
 
 ### Contributing
-1. Fork the repository
-2. Create feature branch
-3. Add ontology enhancements
-4. Include comprehensive tests
-5. Update documentation
-6. Submit pull request
+See [CONTRIBUTING.md](CONTRIBUTING.md). Security issues: see [SECURITY.md](SECURITY.md).
 
 ## Integration
 
@@ -448,18 +452,18 @@ db = client.db('aws_ontology', username='root', password=os.getenv('ARANGO_PASSW
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## Citation
+
+If you use the AWS Ontology in research, please cite it using the metadata in
+[CITATION.cff](CITATION.cff).
+
 ## Version History
 
 See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
 
-### Latest Enhancements (v0.4.0)
-- Missing AWS Services (17 new classes: AutoScaling, EFS, DynamoDB, DocumentDB, Redshift, etc.)
-- Enhanced Storage & Database Coverage (EFS, RDS Clusters, DynamoDB, DocumentDB, Redshift)
-- Complete Networking Support (Elastic IPs, Target Groups, Network Interfaces, ACLs, VPC Endpoints)
-- Security Services (KMS Keys & Aliases, Secrets Manager, Security Group Rules)
-- Content Delivery (CloudFront Distributions)
-- 143+ New Example Instances with realistic AWS configurations
-
 ---
 
-**Note**: This is the core open-source AWS Ontology designed for flexible integration with various graph databases and analytics platforms through standard RDF/OWL interfaces and custom transformation patterns.
+**Disclaimer**: This is an independent, community-maintained ontology published by Arango. It is
+not affiliated with, endorsed by, or sponsored by Amazon Web Services. AWS and the AWS service
+names used here are trademarks of Amazon.com, Inc. or its affiliates. The ontology is authored
+from publicly available AWS documentation only.

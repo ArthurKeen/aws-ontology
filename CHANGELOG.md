@@ -7,7 +7,69 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-10-26
+
+First release under the [arango-solutions](https://github.com/arango-solutions) GitHub
+organization, with a permanent namespace.
+
+### Changed (breaking)
+- **Permanent namespace.** The ontology IRI moves from the provisional Protégé default
+  `http://www.semanticweb.org/aws-ontology` to `https://w3id.org/arango-solutions/aws-ontology`
+  (terms: `https://w3id.org/arango-solutions/aws-ontology#`). Added
+  `owl:versionIRI <https://w3id.org/arango-solutions/aws-ontology/0.6.0>`. Redirect rules for
+  w3id.org live in `w3id/`.
+- **`hasResource` split.** It was overloaded for API Gateway resources *and* IAM policy
+  statement resources. `hasResource` now relates only `APIGateway` → `APIGatewayResource`; the
+  new `hasStatementResource` relates `PolicyStatement` → `Resource`.
+- **IAM identity hierarchy.** New `IAMIdentity` (users, groups, roles) and `IAMEntity` (users,
+  roles), using AWS's own terms. `IAMGroup` is now a subclass of `IAMIdentity`; `IAMUser` and
+  `IAMRole` are subclasses of `IAMEntity`. `hasPolicyAttachment` (and its equivalent
+  `hasPolicy`) has domain `IAMIdentity`; `hasPermissionBoundary` and `canAssumeRole` have
+  domain `IAMEntity`.
+- `examples.ttl` is now its own ontology, `https://w3id.org/arango-solutions/aws-ontology/examples`,
+  importing the main ontology by IRI (it previously redeclared the main ontology IRI and
+  imported `<file:aws.owl>`). `ontology/catalog-v001.xml` resolves the imports locally in Protégé.
+
+### Fixed
+- **Ontology + examples were logically inconsistent.** HermiT reported the combination as
+  inconsistent: 15 example individuals were entailed into disjoint categories. Causes:
+  - multiple `rdfs:domain` values on `hasResource`, `hasPolicyAttachment`, and
+    `hasPermissionBoundary` (OWL reads these as an *intersection*, so every API Gateway was
+    inferred to be a policy statement, every IAM user a group and a role, and so on);
+  - the security-group rule example used the IAM-only `memberOf`; it now uses the new
+    `securityGroupRuleOf` / `hasSecurityGroupRule` (sub-property of `contains`);
+  - two `appliesTo` example triples pointed the wrong way (resource → security group);
+  - `cidrBlock` was restricted to `NetworkingResource`, though security group rules and network
+    ACL entries also carry CIDR blocks; its domain is now `AWSResource`.
+- **`tools/import_to_arangodb.py` could not import anything.** It assigned the boolean
+  returned by `create_database()` to the database handle, and called a non-existent
+  `ArangoRDF.insert_rdf()`. It now uses ArangoRDF's `rdf_to_arangodb_by_pgt` / `_rpt` / `_lpg`
+  (new `--model` and `--graph-name` options, PGT by default), its `--test-queries` match the
+  PGT layout and fail the run when the graph is empty, and it reads `ARANGO_HOST`,
+  `ARANGO_USERNAME`, and `ARANGO_DATABASE`.
+- `tools/propose_ontology_updates.py` now uses `claude-opus-5-5` with explicit effort and the
+  server-side refusal fallback.
+- Documentation counts, Python version (3.11+), serialization name (RDF/XML), and the AQL and
+  SPARQL examples now match the code. `docs/ARANGODB_INTEGRATION.md` and
+  `docs/ENVIRONMENT_VARIABLES.md` were rewritten to document only real APIs and variables, and
+  no longer suggest a default database password.
+
+### Removed
+- Unused runtime dependencies `owlready2` (now a dev dependency, for HermiT) and `requests`;
+  `anthropic` moved to the optional `monitor` dependency group.
+- `PRIVATE_REPO_TEMPLATE.md` and `docs/CODE_QUALITY_IMPROVEMENTS.md` (internal planning
+  documents), and the maintainer's local AI-assistant harness (`.claude/`, `.cursor/`,
+  `CLAUDE.md`) from version control.
+
 ### Added
+- `tests/test_consistency.py`: a HermiT OWL 2 DL consistency check over ontology + examples
+  (required in CI), a fast disjointness-clash check, and a lint that rejects intersection
+  domains/ranges.
+- `tests/test_arangodb_import.py`: an end-to-end import of all three ArangoRDF models into a
+  live ArangoDB (a service container in CI).
+- `CONTRIBUTING.md`, `SECURITY.md`, `CITATION.cff`, issue and PR templates, Dependabot,
+  `.mailmap`, and a non-affiliation disclaimer; the ontology header now carries
+  `dcterms:publisher` and `dcterms:license`.
 - **Ontology-level provenance annotations (PRD v2.0, REQ-040)**: `dcterms:source`/`creator`/
   `contributor`/`created`/`modified`/`description` on the `owl:Ontology` header, plus two new local
   annotation properties, `:provenanceMethod` and `:verificationMethod`, declaring machine-readably
@@ -333,6 +395,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History Summary
 
+- **v0.6.0**: Permanent w3id namespace, HermiT-verified consistency, working ArangoDB import,
+  service coverage rounds 1-5 (162 classes), ontology provenance annotations
+- **v0.5.0**: AI/GenAI, workforce identity, governance, detective security, SHACL, PROV-O, SKOS
+
 - **v0.4.2**: ArangoDB integration, code quality improvements
 - **v0.4.1**: Documentation and metrics corrections
 - **v0.4.0**: Expanded service coverage (security, analytics-adjacent, storage), new properties
@@ -342,6 +408,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Migration Notes
 
+### From v0.5.0 to v0.6.0
+- Replace the namespace `http://www.semanticweb.org/aws-ontology#` with
+  `https://w3id.org/arango-solutions/aws-ontology#` in data and queries (a plain text
+  substitution is sufficient).
+- Policy statement data: rename `aws:hasResource` to `aws:hasStatementResource` where the
+  subject is a `PolicyStatement`.
+- Security group rules linked with `aws:memberOf` should use `aws:securityGroupRuleOf`.
+- Data that relied on `aws:appliesTo` running from a resource to its security group should be
+  reversed (security group → resource).
+
 ### From v0.1.0 to v0.2.0
 - No breaking changes
 - All v0.1.0 queries remain compatible
@@ -349,6 +425,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Examples significantly expanded
 
 ## Links
-- [GitHub Releases](https://github.com/YOUR_USERNAME/AWS_Ontology/releases)
-- [Contributing Guide](README.md#development)
+- [GitHub Releases](https://github.com/arango-solutions/AWS_Ontology/releases)
+- [Contributing Guide](CONTRIBUTING.md)
 - [Maintenance Strategy](docs/MAINTENANCE_STRATEGY.md) 
