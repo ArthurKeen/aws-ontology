@@ -11,10 +11,16 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
+import difflib
+import os
+import subprocess
+import tempfile
+
 from tests.base_test import BaseOntologyTest
+from utils.common import serialize_rdfxml
 
 try:
-    from rdflib import Graph, compare
+    from rdflib import OWL, RDF, RDFS, BNode, Graph, Literal, URIRef, compare
 except ImportError:
     print("rdflib not installed. Install with: pip install rdflib")
     sys.exit(1)
@@ -90,6 +96,75 @@ class TestFormatSynchronization(BaseOntologyTest):
                     error_msg += f"  ... and {len(ttl_only) - 5} more\n"
 
             self.fail(error_msg)
+
+    def test_owl_file_is_generated_from_ttl(self):
+        """The committed OWL file must be exactly what sync_formats.py writes from the TTL."""
+        ttl_graph = Graph()
+        ttl_graph.parse(str(self.ttl_file), format="turtle")
+
+        expected = serialize_rdfxml(ttl_graph)
+        actual = self.owl_file.read_text(encoding="utf-8")
+
+        self.assertTrue(
+            actual == expected,
+            "aws.owl differs from the deterministic serialization of aws.ttl. "
+            "Regenerate it with: python tools/sync_formats.py ttl-to-owl",
+        )
+
+    def serialize_in_fresh_process(self, ttl_path: Path, hash_seed: str) -> str:
+        """Serialize a TTL file the way sync_formats.py does, in a new Python process."""
+        script = (
+            "import sys; sys.path.insert(0, '.'); from rdflib import Graph; "
+            "from utils.common import serialize_rdfxml; "
+            "sys.stdout.write(serialize_rdfxml(Graph().parse(sys.argv[1])))"
+        )
+        result = subprocess.run(
+            [sys.executable, "-c", script, str(ttl_path)],
+            capture_output=True,
+            text=True,
+            cwd=project_root,
+            env={**os.environ, "PYTHONHASHSEED": hash_seed},
+            timeout=120,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        return result.stdout
+
+    def test_serialization_ignores_hash_seed(self):
+        """RDF/XML output must not depend on Python's per-process hash seed."""
+        first = self.serialize_in_fresh_process(self.ttl_file, "1")
+        second = self.serialize_in_fresh_process(self.ttl_file, "2")
+
+        self.assertTrue(first == second, "RDF/XML output changed with the hash seed")
+
+    def test_small_change_gives_small_diff(self):
+        """Adding one class with a restriction must only add lines, not reorder the file."""
+        graph = Graph()
+        graph.parse(str(self.ttl_file), format="turtle")
+        new_class = URIRef("https://w3id.org/arango-solutions/aws-ontology#DiffTestClass")
+        restriction = BNode()
+        graph.add((new_class, RDF.type, OWL.Class))
+        graph.add((new_class, RDFS.label, Literal("Diff Test Class")))
+        graph.add((new_class, RDFS.subClassOf, restriction))
+        graph.add((restriction, RDF.type, OWL.Restriction))
+        graph.add((restriction, OWL.onProperty, RDFS.label))
+        graph.add((restriction, OWL.maxCardinality, Literal(1)))
+
+        with tempfile.TemporaryDirectory() as tmp:
+            changed_ttl = Path(tmp) / "changed.ttl"
+            graph.serialize(destination=str(changed_ttl), format="turtle")
+            # Separate runs, as when a contributor regenerates the file after an edit
+            before = self.serialize_in_fresh_process(self.ttl_file, "1").splitlines()
+            after = self.serialize_in_fresh_process(changed_ttl, "2").splitlines()
+
+        changed = [
+            line
+            for line in difflib.unified_diff(before, after, lineterm="", n=0)
+            if line[:1] in "+-" and not line.startswith(("+++", "---"))
+        ]
+        removed = [line for line in changed if line.startswith("-")]
+
+        self.assertEqual(removed, [], "Adding triples removed or reordered existing lines")
+        self.assertLessEqual(len(changed), 15, f"Expected a small diff, got {len(changed)} lines")
 
     def test_version_consistency(self):
         """Test that version information is consistent between files."""

@@ -12,7 +12,13 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 from utils.cli_common import create_base_parser, handle_keyboard_interrupt
-from utils.common import TTL_FORMAT, XML_FORMAT, get_ontology_files, load_ontology_graph
+from utils.common import (
+    TTL_FORMAT,
+    XML_FORMAT,
+    get_ontology_files,
+    load_ontology_graph,
+    serialize_rdfxml,
+)
 from utils.logging_config import setup_tool_logging
 
 try:
@@ -29,15 +35,12 @@ def convert_ttl_to_owl(ttl_file: Path, owl_file: Path) -> bool:
         if graph is None:
             return False
 
-        # Serialize to OWL/XML
-        owl_content = graph.serialize(format="xml")
+        # Serialize to OWL/XML in a stable order, so the file only changes where the ontology does
+        owl_content = serialize_rdfxml(graph)
 
         # Write to file
         with open(owl_file, "w", encoding="utf-8") as f:
-            if isinstance(owl_content, bytes):
-                f.write(owl_content.decode("utf-8"))
-            else:
-                f.write(owl_content)
+            f.write(owl_content)
 
         print(f"✅ Converted {ttl_file} → {owl_file}")
         return True
