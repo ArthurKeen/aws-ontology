@@ -84,7 +84,7 @@ import rdflib
 
 # Load the ontology
 g = rdflib.Graph()
-g.parse('ontology/aws.owl', format='xml')
+g.parse("ontology/aws.owl", format="xml")
 
 # Query with SPARQL
 results = g.query("""

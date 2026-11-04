@@ -258,8 +258,10 @@ Once imported, you can query the ontology using AQL (ArangoDB Query Language):
 from arango import ArangoClient
 
 # Connect to database
-client = ArangoClient(hosts='http://localhost:8529')
-db = client.db('aws_ontology', username='root', password=os.getenv('ARANGO_PASSWORD', 'your_password'))
+client = ArangoClient(hosts="http://localhost:8529")
+db = client.db(
+    "aws_ontology", username="root", password=os.getenv("ARANGO_PASSWORD", "your_password")
+)
 
 # Query all AWS service classes
 aql = """
