@@ -4,11 +4,14 @@ Common utilities for the AWS Ontology project.
 Provides shared functionality to reduce code duplication.
 """
 
+import io
 import logging
 from pathlib import Path
 
 try:
-    from rdflib import Graph, Namespace
+    from rdflib import RDF, BNode, Graph, Literal, Namespace
+    from rdflib.compare import to_canonical_graph
+    from rdflib.plugins.serializers.rdfxml import XMLSerializer
 
     RDFLIB_AVAILABLE = True
 except ImportError:
@@ -64,6 +67,61 @@ def load_ontology_graph(file_path: Path, format: str = TTL_FORMAT) -> Graph | No
     except Exception as e:
         logging.error(f"Failed to load ontology from {file_path}: {e}")
         return None
+
+
+def _term_sort_key(term) -> tuple[int, str, str, str]:
+    """Order URIs, then blank nodes, then literals (by value, datatype, language)."""
+    if isinstance(term, Literal):
+        return (2, str(term), str(term.datatype or ""), term.language or "")
+    return (1 if isinstance(term, BNode) else 0, str(term), "", "")
+
+
+class _SortedGraph(Graph):
+    """A graph that yields subjects and predicate-object pairs in sorted order.
+
+    rdflib's RDF/XML serializer writes triples in store iteration order, which
+    depends on Python's per-process hash seed, so the same graph would come out
+    differently on every run.
+    """
+
+    def subjects(self, predicate=None, object=None, unique=False):
+        return iter(sorted(set(super().subjects(predicate, object)), key=_term_sort_key))
+
+    def predicate_objects(self, subject=None, unique=False):
+        pairs = set(super().predicate_objects(subject))
+        # rdf:type first, so each description opens with what the subject is
+        return iter(
+            sorted(
+                pairs,
+                key=lambda po: (po[0] != RDF.type, _term_sort_key(po[0]), _term_sort_key(po[1])),
+            )
+        )
+
+
+def serialize_rdfxml(graph: Graph) -> str:
+    """
+    Serialize a graph to RDF/XML deterministically.
+
+    The same graph always produces the same text, and a small change to the graph
+    produces a small diff: blank nodes get labels derived from their content
+    (rdflib.compare.to_canonical_graph) instead of random IDs, and subjects and
+    their properties are written in sorted order.
+
+    Args:
+        graph: The graph to serialize
+
+    Returns:
+        The RDF/XML document as a string
+    """
+    ordered = _SortedGraph()
+    for prefix, namespace in graph.namespaces():
+        ordered.bind(prefix, namespace, override=True, replace=True)
+    for triple in to_canonical_graph(graph):
+        ordered.add(triple)
+
+    stream = io.BytesIO()
+    XMLSerializer(ordered).serialize(stream, encoding="utf-8")
+    return stream.getvalue().decode("utf-8")
 
 
 def get_ontology_files() -> tuple[Path, Path, Path]:

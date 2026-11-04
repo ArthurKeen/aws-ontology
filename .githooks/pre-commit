@@ -38,32 +38,23 @@ if [[ $OWL_STAGED -eq 0 && $TTL_STAGED -eq 0 ]]; then
     exit 0
 fi
 
-# Check if both files are staged when one is modified
+# Only one file staged is fine when the other already matches it (e.g. regenerating
+# aws.owl without changing aws.ttl), but then the semantic check below is required.
+ONE_SIDED=0
 if [[ $OWL_STAGED -ne $TTL_STAGED ]]; then
-    echo -e "${RED}❌ Only one ontology file is staged for commit${NC}"
-    echo -e "${YELLOW}When modifying ontology files, both OWL and TTL must be updated together.${NC}"
-    echo ""
-    echo "Staged files:"
-    if [[ $OWL_STAGED -eq 1 ]]; then
-        echo "  ✓ $OWL_FILE"
-    else
-        echo "  ✗ $OWL_FILE (not staged)"
-    fi
-    if [[ $TTL_STAGED -eq 1 ]]; then
-        echo "  ✓ $TTL_FILE"
-    else
-        echo "  ✗ $TTL_FILE (not staged)"
-    fi
-    echo ""
-    echo "To fix this:"
-    echo "  1. Ensure both files are updated and synchronized"
-    echo "  2. Stage both files: git add $OWL_FILE $TTL_FILE"
-    echo "  3. Or run: make sync-check && git add ontology/"
-    exit 1
+    ONE_SIDED=1
+    echo -e "${YELLOW}Only one ontology file is staged; checking it still matches the other${NC}"
 fi
+
+one_sided_unverified() {
+    echo -e "${RED}❌ Only one ontology file is staged and synchronization could not be checked${NC}"
+    echo "Install rdflib, or stage both files: git add $OWL_FILE $TTL_FILE"
+    exit 1
+}
 
 # Check if Python and rdflib are available
 if ! command -v python3 &> /dev/null; then
+    [[ $ONE_SIDED -eq 1 ]] && one_sided_unverified
     echo -e "${YELLOW}⚠️  Python3 not found, skipping semantic sync check${NC}"
     echo -e "${GREEN}✅ Basic checks passed (both files staged)${NC}"
     exit 0
@@ -94,6 +85,7 @@ if python3 -c "import rdflib" 2>/dev/null; then
         exit 1
     fi
 else
+    [[ $ONE_SIDED -eq 1 ]] && one_sided_unverified
     echo -e "${YELLOW}⚠️  rdflib not installed, skipping semantic sync check${NC}"
     echo -e "${YELLOW}To enable full sync checking, install rdflib:${NC}"
     echo -e "${YELLOW}  python3 -m venv venv && source venv/bin/activate && pip install rdflib${NC}"
