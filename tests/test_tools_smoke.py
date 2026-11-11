@@ -7,11 +7,14 @@ work (import errors, argparse conflicts, missing dependencies) — bugs that the
 ontology-data tests can never catch because they don't execute the tools.
 """
 
+import os
 import py_compile
 import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 PROJECT_ROOT = Path(__file__).parent.parent
 
@@ -61,6 +64,45 @@ class TestCLISmoke(unittest.TestCase):
             timeout=120,
         )
         self.assertEqual(result.returncode, 0, f"sync check failed:\n{result.stdout}")
+
+
+class TestProposalId(unittest.TestCase):
+    """Each monitor run's proposal is unique (two runs a day, or a re-run, must not clash)."""
+
+    def proposal_id(self, **github_env):
+        from tools.propose_ontology_updates import proposal_id
+
+        with mock.patch.dict(os.environ, github_env):
+            for name in {"GITHUB_RUN_NUMBER", "GITHUB_RUN_ATTEMPT"} - github_env.keys():
+                os.environ.pop(name, None)
+            return proposal_id()
+
+    def test_actions_run_and_attempt(self):
+        pid = self.proposal_id(GITHUB_RUN_NUMBER="57", GITHUB_RUN_ATTEMPT="2")
+        self.assertRegex(pid, r"^\d{4}-\d{2}-\d{2}-run57-2$")
+
+    def test_reruns_differ(self):
+        first = self.proposal_id(GITHUB_RUN_NUMBER="57", GITHUB_RUN_ATTEMPT="1")
+        self.assertNotEqual(first, self.proposal_id(GITHUB_RUN_NUMBER="57", GITHUB_RUN_ATTEMPT="2"))
+
+    def test_local_is_date_only(self):
+        self.assertRegex(self.proposal_id(), r"^\d{4}-\d{2}-\d{2}$")
+
+    def test_id_names_file_and_heading(self):
+        from tools.propose_ontology_updates import write_proposal
+
+        finding = {
+            "service_name": "Example",
+            "rationale": "r",
+            "source_link": "https://example.com",
+            "candidate_classes": [],
+            "candidate_properties": [],
+            "example_arn_format": None,
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            path = write_proposal([finding], Path(tmp), "2026-11-16-run57-2")
+            self.assertEqual(path.name, "2026-11-16-run57-2-monitor-findings.md")
+            self.assertIn("2026-11-16-run57-2", path.read_text().splitlines()[0])
 
 
 class TestModulesCompile(unittest.TestCase):
